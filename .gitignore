@@ -1,6 +1,8 @@
 # binaries
 *.o
 a.out
+libft.a
+minishell
 
 # directories
 KB/bash
