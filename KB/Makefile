@@ -29,26 +29,29 @@ INCLUDES = ./headers
 all: $(LIBFT) $(NAME)
 
 $(LIBFT):
-		make -C $(SRC_DIR)/libft/
+	make -C $(SRC_DIR)/libft/
 
 $(NAME): $(OBJ)
-		@$(CC) $(C_FLAGS) $(OBJ) $(LIBFT) -o $(NAME)
+	@$(CC) $(C_FLAGS) $(OBJ) $(LIBFT) -o $(NAME)
 
 %.o: %.c
-		@echo "Compiling $<..."
-		@$(CC) $(C_FLAGS) -c $< -o $@ -I$(INCLUDES)
+	@echo "Compiling $<..."
+	@$(CC) $(C_FLAGS) -c $< -o $@ -I$(INCLUDES)
+
+test:
+
 
 clean:
-		@make -C ./src/libft clean
-		@echo "Deleting object files in minishell..."
-		@rm -f $(OBJ) $(O_BONUS)
+	@make -C ./src/libft clean
+	@echo "Deleting object files in minishell..."
+	@rm -f $(OBJ) $(O_BONUS)
 
 fclean:
-		@make -C ./src/libft fclean
-		@echo "Deleting object files in minishell..."
-		@echo "Deleting all binaries in minishell..."
-		@rm -f $(NAME)
-		@rm -f $(OBJ) $(O_BONUS)
+	@make -C ./src/libft fclean
+	@echo "Deleting object files in minishell..."
+	@echo "Deleting all binaries in minishell..."
+	@rm -f $(NAME)
+	@rm -f $(OBJ) $(O_BONUS)
 
 re: fclean all
 
