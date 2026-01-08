@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <limits.h>
+#include <string.h>
 #include "../headers/libft.h"
 #include "../headers/get_next_line.h"
 
@@ -45,22 +46,38 @@ void ft_pwd()
 	char path[PATH_MAX];
 
 	if (getcwd(path, PATH_MAX) == NULL)
-		ft_printf("pwd error\n");
+		perror("pwd");
 	else
 		ft_printf("%s\n", path);
 }
 
-void	ft_cd(char **argv)
+void	ft_cd(int argc, char **argv)
 {
 	char path[PATH_MAX];
 
 	if (getcwd(path, PATH_MAX) == NULL)
-		ft_printf("pwd error\n");
-
+		return(perror("cd"));
+	if (argc < 2)
+		return ((void) ft_printf("cd: missing operand\n"));
+	if (argc > 2)
+		return((void) ft_printf("cd: too many arguments\n"));
+	if (argv[1][0] == '/')
+	{
+		if (chdir(argv[1]) != 0)
+			perror("cd");
+		return ;
+	}
+	if (ft_strlen(path) + ft_strlen(argv[1]) + 1 > PATH_MAX)
+	return ((void) ft_printf("cd: ENAMETOOLONG\n"));
+	ft_strlcat(path, "/", PATH_MAX);
+	ft_strlcat(path, argv[1], PATH_MAX);
+	if (chdir(path) != 0)
+		perror("cd");
 }
 
 int main(int argc, char **argv)
 {
-	if (argc > 1)
-		ft_echo(argv);
+	if (argc > 0)
+		ft_cd(argc, argv);
+	ft_pwd();
 }

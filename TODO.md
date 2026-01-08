@@ -16,13 +16,20 @@
 ### Commands
 - [ ] Built-in commands
   - [x] `echo` with `-n`
-    - Remarks: Function expects only tokens after echo.
+    - Remarks: Function expects only tokens after echo including echo as argv[0].
     ```C
-    void ft_echo(char **args);
+    void ft_echo(char **argv);
     ```
 
-  - [ ] `cd` only with a relative or absolute path
+  - [x] `cd` only with a relative or absolute path
+  - Remarks: Function expects only tokens after cd including cd as argv[0]. Expects argc to be 1.
+    ```C
+    void ft_cd(int argc, char **argv);
+    ```
   - [x] `pwd`
+    ```C
+    void ft_pwd();
+    ```
   - [ ] `export`
   - [ ] `unset`
   - [ ] `env`
