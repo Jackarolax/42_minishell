@@ -20,6 +20,10 @@ int	ft_strcmp(const char *s1, const char *s2)
 	return (0);
 }
 
+/**
+ * @brief Print to STDOUT, passed string.
+ * Checks for -n option.
+ */
 void ft_echo(int argc, char **argv)
 {
 	int no_last_line;
@@ -41,6 +45,10 @@ void ft_echo(int argc, char **argv)
 		ft_printf("\n");
 }
 
+/**
+ * @brief Print to STDOUT, "print working directory".
+ * i.e. current directory
+ */
 void ft_pwd()
 {
 	char path[PATH_MAX];
@@ -58,7 +66,7 @@ void ft_pwd()
  */
 void	ft_cd(int argc, char **argv)
 {
-	char path[PATH_MAX];
+	char	path[PATH_MAX];
 
 	if (getcwd(path, PATH_MAX) == NULL)
 		return(perror("cd"));

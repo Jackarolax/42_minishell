@@ -12,56 +12,21 @@
 
 #include "minishell.h"
 
-void	print_tokens(t_list *tokens)
-{
-	t_list *cursor;
-
-	cursor = tokens;
-	while (cursor != NULL)
-	{
-		printf("%s\n", (char *)cursor->content);
-		cursor = cursor->next;
-	}
-}
-
-void	test_env(t_env_vars *env_copy)
-{
-	t_env_vars *curr;
-
-	curr = env_copy;
-	while (curr != NULL)
-	{
-		printf("key %s\n", curr->key);
-		for (int i = 0; curr->values[i] != NULL; i++)
-			printf("value: %s\n", curr->values[i]);
-		curr = curr->next;
-	}
-}
-
 /**
  *
  */
 int main(int argc, char **argv, char **envp)
 {
-	char		*input;
-	t_list		*tokens;
-	t_env_vars	*env_copy;
+	char			*input;
+	t_minishell		data;
 
-	env_copy = NULL;
-	initialize(argc, argv, &env_copy, envp);
-	test_env(env_copy); // eventually remove BTW
+	initialize(argc, argv, envp, &data);
 	while (1)
 	{
 		input = listen_input(STDIN_FILENO);
-		if (input == NULL)
-			break ;
-		if (input[0] == '\n')
-		{
-			free(input);
-			continue ;
-		}
-		tokens = parse_tokens(input);
-		print_tokens(tokens);
+		if (!input)
+			break;
+		write(1, input, ft_strlen(input));
 	}
 	return (g_signal);
 }

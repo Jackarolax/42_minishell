@@ -10,7 +10,10 @@ void	signal_handler(int signo)
 {
 	g_signal = signo;
 	if (signo == SIGINT)
+	{
 		write(1, "\n", 1);
+		
+	}
 }
 
 /**

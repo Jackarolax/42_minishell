@@ -1,23 +1,5 @@
 #include "minishell.h"
 
-// /**
-//  * @brief Perform a token until NULL.
-//  * Skip over
-//  */
-// // Pass envp to perform for command execution
-// void	perform_tokens(t_list *tokens, t_env_vars *copy, char **envp)
-// {
-// 	char	*curr;
-// 	t_list	*cursor;
-
-// 	cursor = tokens;
-// 	if (cursor != NULL)
-// 	{
-// 		curr = (char *)cursor->content;
-// 		perform(curr, tokens, envp);
-// 	}
-// }
-
 /**
  *
  */
@@ -26,35 +8,46 @@ void	free_tokens(t_list *tokens)
 	ft_lstclear(&tokens, free);
 }
 
+/**
+ *
+ */
+void	add_new_token(t_list **tokens, char *str, t_type type)
+{
+	t_token *new_tok;
+
+	new_tok = malloc(sizeof(t_token));
+	if (!new_tok)
+		return ;
+	new_tok->str = str;
+	new_tok->type = type;
+	ft_lstadd_back(tokens, ft_lstnew(new_tok));
+}
+
+int	handle_quotes()
+{
+
+}
+
+/**
+ * TODO: fix to norm
+ */
 t_list	*parse_tokens(char *input)
 {
 	int		i;
 	t_list	*tokens;
 
-	tokens = NULL;
 	i = 0;
+	tokens = NULL;
 	while (input[i])
 	{
-		while(ft_isspace(input[i]))
+		while(input[i] != '\0' && ft_isspace(input[i]))
 			i++;
-		if (!input[i]) // exit if input is end
+		if (!input[i])
 			break;
-
-		// handle quotes
 		if (input[i] == '\'' || input[i] == '"')
-		{
-			char quote = input[i++];
-			int start = i;
-			while (input[i] && input[i] != quote)
-				i++;
-			int len = i - start;
-			char *token = malloc(len + 1);
-			ft_strncpy(token, &input[start], len);
-			token[len] = '\0';
-			ft_lstadd_back(&tokens, ft_lstnew(token));
-			if (input[i] == quote)
-				i++;
-		}
+			i = handle_quotes(input, i, &tokens);
+		else if (input[i])
+			i = handle_quotes()
 
 		// handle redirection operators
 		else if ((input[i] == '<' && input[i+1] == '<') || (input[i] == '>' && input[i+1] == '>'))
