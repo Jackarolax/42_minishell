@@ -27,6 +27,8 @@ int main(int argc, char **argv, char **envp)
 		if (!input)
 			break;
 		write(1, input, ft_strlen(input));
+		write(1, "\n", 1);
 	}
+	disable_raw_mode(&data);
 	return (g_signal);
 }

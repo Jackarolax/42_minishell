@@ -59,6 +59,7 @@ typedef struct s_minishell
 /* raw_mode.c */
 
 void	enable_raw_mode(t_minishell *data);
+void	disable_raw_mode(t_minishell *data);
 
 /* environment.c */
 
