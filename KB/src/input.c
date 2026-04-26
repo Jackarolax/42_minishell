@@ -1,6 +1,8 @@
 #include "minishell.h"
 
-// Removes the character just BEFORE the given position
+/**
+ * @brief Removes the character just BEFORE the given position 
+ */
 char *delete_char(char *str, int pos)
 {
 	char	*new_str;
@@ -30,7 +32,9 @@ char *delete_char(char *str, int pos)
 	return (new_str);
 }
 
-// Inserts character 'c' into 'str' at the index 'pos'
+/**
+ * @brief Inserts character 'c' into 'str' at the index 'pos'
+ */
 char *insert_char(char *str, char c, int pos)
 {
 	char	*new_str;
