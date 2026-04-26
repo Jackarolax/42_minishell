@@ -95,6 +95,12 @@ static void	initialize_env(t_env_vars *env_copy, char **envp)
 	update_variables(env_copy);
 }
 
+void	init_data(t_minishell *data)
+{
+	data->history = NULL;
+	data->processed_env = NULL;
+}
+
 /**
  * @brief Initialize the environment & signal handlers.
  * Exits failure if too many arguments.
@@ -112,6 +118,7 @@ void	initialize(int argc, char **argv, char **envp, t_minishell *data)
 		ft_putstr_fd("Error: env variables don't exist\n", STDERR_FILENO);
 		exit(EXIT_FAILURE);
 	}
+	init_data(data);
 	initialize_env(data->processed_env, envp);
 	setup_signals();
 	enable_raw_mode(data);

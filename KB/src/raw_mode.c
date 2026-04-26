@@ -13,7 +13,8 @@ void	disable_raw_mode(t_minishell *data)
  */
 void	enable_raw_mode(t_minishell *data)
 {
-	struct termios raw;
+	struct termios	raw;
+
 	tcgetattr(STDIN_FILENO, &data->orig_settings);
 	raw = data->orig_settings;
 	raw.c_lflag &= ~(ECHO | ICANON);

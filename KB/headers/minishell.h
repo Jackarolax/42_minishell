@@ -56,6 +56,10 @@ typedef struct s_minishell
 	struct termios	orig_settings;
 }	t_minishell;
 
+/* history.c */
+
+void append_to_history(char *input, t_minishell *data);
+
 /* raw_mode.c */
 
 void	enable_raw_mode(t_minishell *data);
@@ -81,7 +85,7 @@ void	setup_signals(void);
 
 /* parsing.c */
 
-char	*listen_input(int fd);
+char	*listen_input(int fd, t_minishell *data);
 void	initialize(int argc, char **argv, char **envp, t_minishell *data);
 
 /* tokens.c */

@@ -64,7 +64,7 @@ char *insert_char(char *str, char c, int pos)
  * @brief Listens to STDIN.
  * Checks for CTRL + D
  */
-char	*listen_input(int fd)
+char	*listen_input(int fd, t_minishell *data)
 {
 	char	*input;
 	char	c;
@@ -171,6 +171,7 @@ char	*listen_input(int fd)
 			}
 		}
 	}
+	append_to_history(input, data);
 	return (input);
 }
 

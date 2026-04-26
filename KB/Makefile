@@ -18,11 +18,14 @@ SRC_DIR = ./src
 LIBFT = $(SRC_DIR)/libft/libft.a
 
 C_FILES = main.c initializer.c input.c environment.c \
-	signals.c raw_mode.c
+	signals.c raw_mode.c history.c
 
 SRC = $(addprefix $(SRC_DIR)/, $(C_FILES))
 
-OBJ = $(SRC:.c=.o)
+C_OBJS = $(C_FILES:.c=.o)
+
+OBJ_DIR = bin
+OBJ = $(addprefix $(OBJ_DIR)/, $(C_OBJS))
 
 INCLUDES = ./headers
 
@@ -35,7 +38,8 @@ $(LIBFT):
 $(NAME): $(OBJ)
 	@$(CC) $(C_FLAGS) $(OBJ) $(LIBFT) -o $(NAME)
 
-%.o: %.c
+$(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
+	@mkdir -p $(OBJ_DIR)
 	@echo "Compiling $<..."
 	@$(CC) $(C_FLAGS) -c $< -o $@ -I$(INCLUDES)
 
