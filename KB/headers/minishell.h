@@ -49,16 +49,34 @@ typedef struct s_token
 	struct s_token	*next;
 }				t_token;
 
+typedef struct s_history
+{
+	unsigned long	history_count;
+	unsigned long	history_index;
+	char			*buffer;
+	char			**history;
+}	t_history;
+
 typedef struct s_minishell
 {
-	char			**history;
+	t_history		history;
 	t_env_vars		*processed_env;
 	struct termios	orig_settings;
 }	t_minishell;
 
 /* history.c */
 
-void append_to_history(char *input, t_minishell *data);
+void append_to_history(char *input, t_history *history);
+
+// src/input
+
+void arrow_keys(t_minishell *data, char **input, long *cursor, long *len);
+char *delete_char(char *str, long pos);
+char *insert_char(char *str, char c, long pos);
+
+// src/main
+
+void	write_prompt(void);
 
 /* raw_mode.c */
 

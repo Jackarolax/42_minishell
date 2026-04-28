@@ -12,13 +12,14 @@
 
 NAME = minishell
 CC = gcc
-C_FLAGS = -Wall -Werror -Wextra -g
+C_FLAGS = -g
 
 SRC_DIR = ./src
 LIBFT = $(SRC_DIR)/libft/libft.a
 
-C_FILES = main.c initializer.c input.c environment.c \
-	signals.c raw_mode.c history.c
+C_FILES = main/main.c main/prompt.c initializer.c environment.c \
+	signals.c raw_mode.c history.c \
+	input/arrows.c input/input.c input/input_utils.c
 
 SRC = $(addprefix $(SRC_DIR)/, $(C_FILES))
 
@@ -39,7 +40,7 @@ $(NAME): $(OBJ)
 	@$(CC) $(C_FLAGS) $(OBJ) $(LIBFT) -o $(NAME)
 
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
-	@mkdir -p $(OBJ_DIR)
+	@mkdir -p $(dir $@)
 	@echo "Compiling $<..."
 	@$(CC) $(C_FLAGS) -c $< -o $@ -I$(INCLUDES)
 

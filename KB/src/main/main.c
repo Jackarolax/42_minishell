@@ -23,12 +23,12 @@ int main(int argc, char **argv, char **envp)
 	initialize(argc, argv, envp, &data);
 	while (1)
 	{
+		write_prompt();
 		input = listen_input(STDIN_FILENO, &data);
 		if (!input)
 			break ;
+		printf("%s\n", input);
 	}
-
-	// Every exit function here
 	disable_raw_mode(&data);
 	return (g_signal);
 }

@@ -97,7 +97,10 @@ static void	initialize_env(t_env_vars *env_copy, char **envp)
 
 void	init_data(t_minishell *data)
 {
-	data->history = NULL;
+	data->history.buffer = NULL;
+	data->history.history_count = 0;
+	data->history.history_index = 0;
+	data->history.history = NULL;
 	data->processed_env = NULL;
 }
 
