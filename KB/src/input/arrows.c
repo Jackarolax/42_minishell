@@ -1,44 +1,90 @@
 #include "minishell.h"
 
-// static void	up(t_history, char *input, char seq[2], long pos[2])
+/**
+ * @brief Up key. If the index is currently greater than 0, then check.
+ * If we are at the last history index, then let's save the input into buffer.
+ * Then subtract the index.
+ */
+static void	up(t_history *history, char **input, long *cursor, long *line_len)
+{
+	if (history->history_index > 0)
+	{
+		if (history->history_index == history->history_count)
+		{
+			if (history->buffer)
+				free(history->buffer);
+			if ((*input))
+				history->buffer = ft_strdup((*input));
+			else
+				history->buffer = ft_strdup("");
+		}
+		history->history_index--;
+		write(1, "\r$> \033[K", 8);
+		if ((*input))
+			free((*input));
+		(*input) = ft_strdup(history->history[history->history_index]);
+		if ((*input))
+			ft_putstr_fd((*input), 1);
+		(*line_len) = ft_strlen((*input));
+		(*cursor) = (*line_len);
+	}
+}
 
-// /**
-//  *
-//  */
-// static void	up_and_down(t_history *history, char *input, char seq[2], long pos[2])
-// {
-// 	if (seq[1] == 'A')
-// 	{
-// 		if (history->history_index > 0)
-// 		{
-// 			if (history->history_index == history->history_count)
-// 			{
-// 				if (history->buffer)
-// 					free(history->buffer);
-// 				if (input)
-// 					history->buffer = ft_strdup(input);
-// 				else
-// 					history->buffer = ft_strdup("");
-// 			}
-// 			history->history_index--;
-// 			write(1, "\r~$ \033[K", 8);
-// 			if (history->buffer) free(history->buffer);
-// 				history->buffer = ft_strdup(history->history[history->history_index]);
-// 			if (history->buffer) ft_putstr_fd(history->buffer, 1);
-// 			line_len = ft_strlen(history->buffer);
-// 			cursor_pos = line_len;
-// 		}
-// 	}
-// 	else if (seq[1] == 'B')
-// 	{
-
-// 	}
-// }
+/**
+ * @brief Down
+ */
+static void	down(t_history *history, char **input, long *cursor, long *line_len)
+{
+	if (history->history_index < history->history_count)
+	{
+		history->history_index++;
+		write(1, "\r$> \033[K", 8);
+		if ((*input))
+			free((*input));
+		if (history->history_index == history->history_count)
+		{
+			if (history->buffer)
+				(*input) = ft_strdup(history->buffer);
+			else
+				(*input) = ft_strdup("");
+		}
+		else
+			(*input) = ft_strdup(history->history[history->history_index]);
+		if (*input)
+			ft_putstr_fd((*input), 1);
+		(*line_len) = ft_strlen((*input));
+		(*cursor) = (*line_len);
+	}
+}
 
 /**
  *
  */
-void arrow_keys(t_minishell *data, char **input, long *cursor, long *len)
+static void	left(long *cursor)
+{
+	if ((*cursor) > 0)
+	{
+		write(1, "\033[D", 3);
+		(*cursor)--;
+	}
+}
+
+/**
+ *
+ */
+static void	right(long *cursor, long *len)
+{
+	if ((*cursor) < (*len))
+	{
+		write(1, "\033[C", 3);
+		(*cursor)++;
+	}
+}
+
+/**
+ *
+ */
+void arrow_keys(t_history *history, char **input, long *cursor, long *len)
 {
 	char	seq[2];
 
@@ -47,20 +93,12 @@ void arrow_keys(t_minishell *data, char **input, long *cursor, long *len)
 	if (seq[0] == '[')
 	{
 		if (seq[1] == 'D')
-		{
-			if ((*cursor) > 0)
-			{
-				write(1, "\033[D", 3);
-				(*cursor)--;
-			}
-		}
+			left(cursor);
 		else if (seq[1] == 'C')
-		{
-			if ((*cursor) < (*len))
-			{
-				write(1, "\033[C", 3);
-				(*cursor)++;
-			}
-		}
+			right(cursor, len);
+		else if (seq[1] == 'A')
+			up(history, input, cursor, len);
+		else if (seq[1] == 'B')
+			down(history, input, cursor, len);
 	}
 }

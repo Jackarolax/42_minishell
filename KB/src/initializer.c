@@ -101,6 +101,7 @@ void	init_data(t_minishell *data)
 	data->history.history_count = 0;
 	data->history.history_index = 0;
 	data->history.history = NULL;
+	data->input = NULL;
 	data->processed_env = NULL;
 }
 

@@ -1,7 +1,5 @@
 #include "minishell.h"
 
-
-
 /**
  *
  */
@@ -49,12 +47,62 @@ static void	backspace(char **input, long *cursor, long *input_len)
 }
 
 /**
+ * @brief Manage exits for char c. If c is a newline,
+ * write the newline, puts an empty string in input if it is empty
+ * and returns 1. Else if c is a EOT (End of Transmission), then exit the shell.
+ */
+static int	manage_exits(char *c, char **input, long *input_len)
+{
+	if ((*c) == '\n' || (*c) == '\r')
+	{
+		write(1, "\n", 1);
+		if ((*input) == NULL)
+			(*input) = ft_strdup("");
+		return (1);
+	}
+	else if ((*c) == 4)
+	{
+		if ((*input_len) == 0)
+		{
+			write(1, "exit\n", 5);
+			if ((*input))
+				free((*input));
+			return (1);
+		}
+	}
+	return (0);
+}
+
+/**
+ * @brief Manage character and exits.
+ * Checks if the function must exit from manage_exits. If not,
+ * check if the char is a key, a backspace or a printable character.
+ */
+static int	manage_char(char *c, t_minishell *data, long *cursor, long *len)
+{
+	if (manage_exits(c, &data->input, len))
+		return (1);
+	else
+	{
+		if ((*c) == '\033')
+			arrow_keys(&data->history, &data->input, cursor, len);
+		else if ((*c) == 127)
+		{
+			if (cursor > 0)
+				backspace(&data->input, cursor, len);
+		}
+		else if (ft_isprint((*c)))
+			printable(&data->input, c, cursor, len);
+	}
+	return (0);
+}
+
+/**
  * @brief Listens to STDIN.
  * Checks for CTRL + D
  */
 char	*listen_input(int fd, t_minishell *data)
 {
-	char	*input;
 	char	c;
 	long	cursor;
 	long	input_len;
@@ -64,42 +112,21 @@ char	*listen_input(int fd, t_minishell *data)
 	c = 0;
 	cursor = 0;
 	input_len = 0;
-	input = NULL;
+	data->input = NULL;
+	reset_history(&data->history);
 	while (1)
 	{
 		n = read(fd, &c, 1);
 		if (n == -1 || n == 0)
 		{
-			if (input)
-				free(input);
+			if (data->input)
+				free(data->input);
 			return (NULL); // error or EOF
 		}
-		if (c == '\n' || c == '\r')
-		{
-			write(1, &c, 1);
-			break;
-		}
-		else if (c == 4)
-		{
-			if (input_len == 0)
-			{
-				write(1, "exit\n", 5);
-				if (input)
-					free(input);
-				return (NULL);
-			}
-		}
-		else if (c == '\033')
-			arrow_keys(data, &input, &cursor, &input_len);
-		else if (c == 127)
-		{
-			if (cursor > 0)
-				backspace(&input, &cursor, &input_len);
-		}
-		else if (ft_isprint(c))
-			printable(&input, &c, &cursor, &input_len);
+		if (manage_char(&c, data, &cursor, &input_len))
+			break ;
 	}
-	append_to_history(input, &data->history);
-	return (input);
+	append_to_history(&data->input, &data->history);
+	return (data->input);
 }
 

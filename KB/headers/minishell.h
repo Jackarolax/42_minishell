@@ -59,6 +59,7 @@ typedef struct s_history
 
 typedef struct s_minishell
 {
+	char			*input;
 	t_history		history;
 	t_env_vars		*processed_env;
 	struct termios	orig_settings;
@@ -66,11 +67,12 @@ typedef struct s_minishell
 
 /* history.c */
 
-void append_to_history(char *input, t_history *history);
+void	reset_history(t_history *history);
+void	append_to_history(char **input, t_history *history);
 
 // src/input
 
-void arrow_keys(t_minishell *data, char **input, long *cursor, long *len);
+void arrow_keys(t_history *history, char **input, long *cursor, long *len);
 char *delete_char(char *str, long pos);
 char *insert_char(char *str, char c, long pos);
 

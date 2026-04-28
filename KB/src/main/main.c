@@ -17,17 +17,16 @@
  */
 int main(int argc, char **argv, char **envp)
 {
-	char			*input;
 	t_minishell		data;
 
 	initialize(argc, argv, envp, &data);
 	while (1)
 	{
 		write_prompt();
-		input = listen_input(STDIN_FILENO, &data);
-		if (!input)
+		data.input = listen_input(STDIN_FILENO, &data);
+		if (!data.input)
 			break ;
-		printf("%s\n", input);
+		printf("%s\n", data.input);
 	}
 	disable_raw_mode(&data);
 	return (g_signal);
