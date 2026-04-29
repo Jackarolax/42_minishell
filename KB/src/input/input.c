@@ -88,7 +88,7 @@ static int	manage_char(char *c, t_minishell *data, long *cursor, long *len)
 			arrow_keys(&data->history, &data->input, cursor, len);
 		else if ((*c) == 127)
 		{
-			if (cursor > 0)
+			if ((*cursor) > 0)
 				backspace(&data->input, cursor, len);
 		}
 		else if (ft_isprint((*c)))
