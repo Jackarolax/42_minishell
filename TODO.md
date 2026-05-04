@@ -7,7 +7,6 @@
   - [X] Get line
   - [X] Split line into tokens
   - [X] Handle quotes `'`,`"`
-    - Remarks: [ ] Still have to add quote listening feature I think..
   - [ ] Handle escape characters
   - [ ] Handle metacharacters
     - Remarks: Characters like redirects and the heredoc is parsed as a token on a list

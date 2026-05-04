@@ -109,6 +109,7 @@ void	initialize(int argc, char **argv, char **envp, t_minishell *data)
 	}
 	ft_bzero(data, sizeof(t_minishell));
 	initialize_env(&data->processed_env, envp);
+	data->envp = convert_env_to_array(data->processed_env);
 	setup_signals();
 }
 

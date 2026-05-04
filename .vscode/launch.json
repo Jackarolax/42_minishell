@@ -19,6 +19,12 @@
 					"text": "-enable-pretty-printing",
 					"ignoreFailures": true
 				}
+				,
+				{
+					"description": "Follow child process on fork",
+					"text": "set follow-fork-mode child",
+					"ignoreFailures": false
+				}
 			]
 		}
 	]

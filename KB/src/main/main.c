@@ -97,9 +97,7 @@ int main(int argc, char **argv, char **envp)
 		}
 		data.tokens = lexer(data.input);
 		data.cmds = tokens_to_cmds(data.tokens);
-		//execute();
-		//free_delete();
-		print_cmds(data.cmds);
+		execute(data.cmds, &data);
 	}
 	return (g_signal);
 }

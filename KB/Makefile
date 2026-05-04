@@ -20,7 +20,8 @@ LIBFT = $(SRC_DIR)/libft/libft.a
 C_FILES = main/main.c main/prompt.c main/initializer.c env/environment.c \
 	input/signals.c main/raw_mode.c input/history.c \
 	input/arrows.c input/input.c input/input_utils.c \
-	lexer/lexer.c execution/execute.c
+	lexer/lexer.c execution/execute.c execution/commands.c \
+	execution/path_resolver.c
 
 SRC = $(addprefix $(SRC_DIR)/, $(C_FILES))
 

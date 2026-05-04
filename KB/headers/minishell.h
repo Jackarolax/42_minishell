@@ -5,6 +5,7 @@
 #include <stdlib.h>
 #include <signal.h>
 #include <termios.h>
+#include <fcntl.h>
 #include "libft.h" // contains unistd.h
 #include "ft_printf.h"
 #include "minishell.h"
@@ -59,6 +60,9 @@ typedef struct s_history
 	char			**history;
 }	t_history;
 
+/**
+ *
+ */
 typedef struct s_minishell
 {
 	char			*input;
@@ -66,8 +70,16 @@ typedef struct s_minishell
 	t_token			*tokens;
 	t_cmd			*cmds;
 	t_env_vars		*processed_env;
+	char			**envp;
 	struct termios	orig_settings;
 }	t_minishell;
+
+char	**convert_env_to_array(t_env_vars *env_list);
+t_env_vars	*get_env_node(t_env_vars *list, char *target_key);
+
+// commands
+
+char	*get_cmd_path(char *cmd, t_env_vars *env_p);
 
 // input_utils.c
 
@@ -95,6 +107,7 @@ void	update_quote_state(char c, int *quote_state);
 
 // execute.c
 
+void	execute(t_cmd *cmds, t_minishell *data);
 t_cmd	*tokens_to_cmds(t_token *tokens);
 
 /* raw_mode.c */
