@@ -21,6 +21,16 @@ typedef enum e_token_type
 	TOKEN_APPEND
 }	t_token_type;
 
+typedef struct s_cmd
+{
+	char			**args;
+	char			*infile;
+	char			*outfile;
+	int				append;
+	int				heredoc;
+	struct s_cmd	*next;
+}	t_cmd;
+
 /**
  *
  */
@@ -54,6 +64,7 @@ typedef struct s_minishell
 	char			*input;
 	t_history		history;
 	t_token			*tokens;
+	t_cmd			*cmds;
 	t_env_vars		*processed_env;
 	struct termios	orig_settings;
 }	t_minishell;
@@ -81,6 +92,10 @@ void	init_prompt(t_minishell *data);
 
 t_token	*lexer(char *input);
 void	update_quote_state(char c, int *quote_state);
+
+// execute.c
+
+t_cmd	*tokens_to_cmds(t_token *tokens);
 
 /* raw_mode.c */
 

@@ -31,8 +31,8 @@ char *get_token_name(t_token_type type)
 
 void print_tokens(t_token *tokens)
 {
-	t_token *curr;
-	int     i;
+	t_token	*curr;
+	int		i;
 
 	curr = tokens;
 	i = 0;
@@ -49,7 +49,32 @@ void print_tokens(t_token *tokens)
 	printf("====================\n\n");
 }
 
+void print_cmds(t_cmd *cmds)
+{
+	t_cmd	*curr = cmds;
+	int		i, c = 0;
 
+	printf("\n=== PARSER OUTPUT ===\n");
+	while (curr)
+	{
+		printf("Command [%d]:\n", c++);
+
+		i = 0;
+		while (curr->args[i])
+		{
+			printf("  Arg[%d]: %s\n", i, curr->args[i]);
+			i++;
+		}
+		if (curr->infile)
+			printf("  Infile:  %s (Heredoc: %d)\n", curr->infile, curr->heredoc);
+		if (curr->outfile)
+			printf("  Outfile: %s (Append: %d)\n", curr->outfile, curr->append);
+
+		curr = curr->next;
+		if (curr) printf("      |\n      V\n");
+	}
+	printf("=====================\n\n");
+}
 
 /**
  *
@@ -71,8 +96,10 @@ int main(int argc, char **argv, char **envp)
 			continue ;
 		}
 		data.tokens = lexer(data.input);
-		// free_data();
-		print_tokens(data.tokens);
+		data.cmds = tokens_to_cmds(data.tokens);
+		//execute();
+		//free_delete();
+		print_cmds(data.cmds);
 	}
 	return (g_signal);
 }
