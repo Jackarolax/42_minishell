@@ -87,7 +87,8 @@ void	run_child(t_cmd *cmd, t_minishell *data, int prev_fd, int fd[2])
 		ft_putstr_fd("minishell: command not found\n", 2);
 		exit(127);
 	}
-	execve(cmd_path, cmd->args, data->envp);
+	char **fresh_env = convert_env_to_array(data->processed_env);
+	execve(cmd_path, cmd->args, fresh_env);
 	perror("execve");
 	exit(1);
 }
