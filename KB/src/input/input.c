@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   input.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: kmonjard <kmonjard@student.42berlin.de>    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/05/05 00:03:56 by kmonjard          #+#    #+#             */
+/*   Updated: 2026/05/05 00:04:50 by kmonjard         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 /**
@@ -25,7 +37,7 @@ static void	printable(char **input, char *c, long *cursor, long *input_len)
 }
 
 /**
- *
+ * @brief
  */
 static void	backspace(char **input, long *cursor, long *input_len)
 {
@@ -129,7 +141,7 @@ void	end_of_prompt(t_minishell *data)
 
 /**
  * @brief Listens to STDIN.
- * Checks for CTRL + D
+ * Checks for CTRL + D,
  */
 char	*listen_input(int fd, t_minishell *data)
 {

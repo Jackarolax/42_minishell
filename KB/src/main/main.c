@@ -3,7 +3,7 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kmonjard <kmonjard@student.42berlin.d      +#+  +:+       +#+        */
+/*   By: kmonjard <kmonjard@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/24 12:09:49 by kmonjard          #+#    #+#             */
 /*   Updated: 2025/12/24 14:09:50 by kmonjard         ###   ########.fr       */
@@ -97,8 +97,9 @@ int main(int argc, char **argv, char **envp)
 		}
 		data.tokens = lexer(data.input);
 		data.cmds = tokens_to_cmds(data.tokens);
-		print_cmds(data.cmds);
+//		print_cmds(data.cmds);
 		execute(data.cmds, &data);
+		cleanup();
 	}
 	return (g_signal);
 }

@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   execute.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: kmonjard <kmonjard@student.42berlin.de>    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/05/05 00:05:20 by kmonjard          #+#    #+#             */
+/*   Updated: 2026/05/05 00:05:21 by kmonjard         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 #include <sys/wait.h>
 
@@ -84,10 +96,11 @@ void	run_child(t_cmd *cmd, t_minishell *data, int prev_fd, int fd[2])
 	char	*cmd_path = get_cmd_path(cmd->args[0], data->processed_env);
 	if (!cmd_path)
 	{
-		ft_putstr_fd("minishell: command not found\n", 2);
+		// add command not found here
+		ft_putstr_fd(": command not found\n", 2);
 		exit(127);
 	}
-	char **fresh_env = convert_env_to_array(data->processed_env);
+	char **fresh_env = convert_env_to_array(data->processed_env); // somehow this fixes env
 	execve(cmd_path, cmd->args, fresh_env);
 	perror("execve");
 	exit(1);

@@ -5,5 +5,5 @@
  */
 void	cleanup(t_minishell *data)
 {
-
+	
 }
