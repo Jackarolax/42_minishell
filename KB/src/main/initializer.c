@@ -62,7 +62,7 @@ static void	update_variables(t_env_vars *env_copy)
 /**
  * @brief Initialize a copy of the environment.
  */
-static void	initialize_env(t_env_vars *env_copy, char **envp)
+static void	initialize_env(t_env_vars **env_copy, char **envp)
 {
 	int			i;
 	t_env_vars	*curr;
@@ -85,14 +85,14 @@ static void	initialize_env(t_env_vars *env_copy, char **envp)
 		if (!curr->values)
 			return ;
 		curr->next = NULL;
-		if (env_copy == NULL)
-			env_copy = curr;
+		if ((*env_copy) == NULL)
+			(*env_copy) = curr;
 		else
 			prev->next = curr;
 		prev = curr;
 		envp++;
 	}
-	update_variables(env_copy);
+	update_variables((*env_copy));
 }
 
 /**
@@ -108,7 +108,7 @@ void	initialize(int argc, char **argv, char **envp, t_minishell *data)
 		exit(EXIT_FAILURE);
 	}
 	ft_bzero(data, sizeof(t_minishell));
-	initialize_env(data->processed_env, envp);
+	initialize_env(&data->processed_env, envp);
 	setup_signals();
 }
 
