@@ -17,9 +17,10 @@ C_FLAGS = -g
 SRC_DIR = ./src
 LIBFT = $(SRC_DIR)/libft/libft.a
 
-C_FILES = main/main.c main/prompt.c initializer.c environment.c \
-	signals.c raw_mode.c history.c \
-	input/arrows.c input/input.c input/input_utils.c
+C_FILES = main/main.c main/prompt.c main/initializer.c env/environment.c \
+	input/signals.c main/raw_mode.c input/history.c \
+	input/arrows.c input/input.c input/input_utils.c \
+	lexer/lexer.c
 
 SRC = $(addprefix $(SRC_DIR)/, $(C_FILES))
 

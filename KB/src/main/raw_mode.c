@@ -17,6 +17,6 @@ void	enable_raw_mode(t_minishell *data)
 
 	tcgetattr(STDIN_FILENO, &data->orig_settings);
 	raw = data->orig_settings;
-	raw.c_lflag &= ~(ECHO | ICANON);
+	raw.c_lflag &= ~(ECHO | ICANON | ISIG);
 	tcsetattr(STDIN_FILENO, TCSAFLUSH, &raw);
 }

@@ -31,7 +31,9 @@ static void	up(t_history *history, char **input, long *cursor, long *line_len)
 }
 
 /**
- * @brief Down
+ * @brief Down key. If the current index is less than the count,
+ * increment, and then free the current input. If we are at 0,
+ * duplicate the buffer into input. Else, retrieve the appropriate string.
  */
 static void	down(t_history *history, char **input, long *cursor, long *line_len)
 {
@@ -58,7 +60,7 @@ static void	down(t_history *history, char **input, long *cursor, long *line_len)
 }
 
 /**
- *
+ * @brief Left key. Write the left key appropriately.
  */
 static void	left(long *cursor)
 {
@@ -70,7 +72,7 @@ static void	left(long *cursor)
 }
 
 /**
- *
+ * @brief Right key. Write the right key appropriately.
  */
 static void	right(long *cursor, long *len)
 {
@@ -82,7 +84,7 @@ static void	right(long *cursor, long *len)
 }
 
 /**
- *
+ * @brief Manages all arrow key inputs. Up, down, left and right keys.
  */
 void arrow_keys(t_history *history, char **input, long *cursor, long *len)
 {

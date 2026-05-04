@@ -1,5 +1,9 @@
 #include "minishell.h"
 
+/**
+ * @brief Reset the index to the count every string entry.
+ * Free the buffer if it exists.
+ */
 void	reset_history(t_history *history)
 {
 	history->history_index = history->history_count;

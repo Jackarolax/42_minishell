@@ -1,5 +1,31 @@
 #include "minishell.h"
 
+/**
+ * @brief Check input before lexing.
+ * Currently only checks for unclosed quotes.
+ * Expandable.
+ */
+int	check_input(char *input)
+{
+	int	i = 0;
+	int	quote_state = 0;
+
+	if (!input)
+		return (1);
+	while (input[i])
+	{
+		update_quote_state(input[i], &quote_state);
+		i++;
+	}
+	if (quote_state != 0)
+	{
+		ft_putstr_fd("minishell: syntax error: unclosed quotes\n", 2);
+		g_signal = 2;
+		return (0);
+	}
+	return (1);
+}
+
 // Removes the character just BEFORE the given position
 char *delete_char(char *str, long pos)
 {
@@ -30,8 +56,10 @@ char *delete_char(char *str, long pos)
 	return (new_str);
 }
 
-// Inserts character 'c' into 'str' at the index 'pos'
-char *insert_char(char *str, char c, long pos)
+/**
+ *@brief Inserts character 'c' into 'str' at the index 'pos'
+ */
+char	*insert_char(char *str, char c, long pos)
 {
 	char	*new_str;
 	long	len;

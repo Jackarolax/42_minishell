@@ -1,6 +1,7 @@
 #include "minishell.h"
 
-void	write_prompt(void)
+void	init_prompt(t_minishell *data)
 {
 	write(1, "$> ", 3);
+	enable_raw_mode(data);
 }

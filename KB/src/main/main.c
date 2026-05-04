@@ -12,22 +12,67 @@
 
 #include "minishell.h"
 
+char *get_token_name(t_token_type type)
+{
+	if (type == TOKEN_WORD)
+		return ("WORD");
+	if (type == TOKEN_PIPE)
+		return ("PIPE");
+	if (type == TOKEN_REDIR_IN)
+		return ("REDIR_IN (<)");
+	if (type == TOKEN_REDIR_OUT)
+		return ("REDIR_OUT (>)");
+	if (type == TOKEN_HEREDOC)
+		return ("HEREDOC (<<)");
+	if (type == TOKEN_APPEND)
+		return ("APPEND (>>)");
+	return ("UNKNOWN");
+}
+
+void print_tokens(t_token *tokens)
+{
+	t_token *curr;
+	int     i;
+
+	curr = tokens;
+	i = 0;
+	printf("\n=== LEXER OUTPUT ===\n");
+	if (!curr)
+		printf("List is empty!\n");
+
+	while (curr)
+	{
+		printf("Token %02d | Type: %-15s | Value: [%s]\n", i, get_token_name(curr->type), curr->value);
+		curr = curr->next;
+		i++;
+	}
+	printf("====================\n\n");
+}
+
+
+
 /**
  *
  */
 int main(int argc, char **argv, char **envp)
 {
-	t_minishell		data;
+	t_minishell	data;
 
 	initialize(argc, argv, envp, &data);
 	while (1)
 	{
-		write_prompt();
+		init_prompt(&data);
 		data.input = listen_input(STDIN_FILENO, &data);
 		if (!data.input)
 			break ;
-		printf("%s\n", data.input);
+		if (!check_input(data.input))
+		{
+			free(data.input);
+			continue ;
+		}
+		data.tokens = lexer(data.input);
+		// free_data();
+		print_tokens(data.tokens);
 	}
-	disable_raw_mode(&data);
 	return (g_signal);
 }

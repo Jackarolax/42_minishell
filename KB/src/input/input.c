@@ -45,13 +45,24 @@ static void	backspace(char **input, long *cursor, long *input_len)
 			write(1, "\033[D", 3);
 	}
 }
+static char	*end_of_text(t_minishell *data)
+{
+	write(1, "^C\n", 3);
+	g_signal = 130;
+	if (data->history.buffer)
+	{
+		free(data->history.buffer);
+		data->history.buffer = NULL;
+	}
+	return (ft_strdup(""));
+}
 
 /**
  * @brief Manage exits for char c. If c is a newline,
  * write the newline, puts an empty string in input if it is empty
  * and returns 1. Else if c is a EOT (End of Transmission), then exit the shell.
  */
-static int	manage_exits(char *c, char **input, long *input_len)
+static int	manage_exits(char *c, char **input, long *input_len, t_minishell *data)
 {
 	if ((*c) == '\n' || (*c) == '\r')
 	{
@@ -64,14 +75,24 @@ static int	manage_exits(char *c, char **input, long *input_len)
 	{
 		if ((*input_len) == 0)
 		{
-			write(1, "exit\n", 5);
+			write(1, "\nexit\n", 6);
 			if ((*input))
+			{
 				free((*input));
+				(*input) = NULL;
+			}
 			return (1);
 		}
 	}
+	else if ((*c) == 3)
+	{
+		(*input) = end_of_text(data);
+		return (1);
+	}
 	return (0);
 }
+
+
 
 /**
  * @brief Manage character and exits.
@@ -80,7 +101,7 @@ static int	manage_exits(char *c, char **input, long *input_len)
  */
 static int	manage_char(char *c, t_minishell *data, long *cursor, long *len)
 {
-	if (manage_exits(c, &data->input, len))
+	if (manage_exits(c, &data->input, len, data))
 		return (1);
 	else
 	{
@@ -95,6 +116,15 @@ static int	manage_char(char *c, t_minishell *data, long *cursor, long *len)
 			printable(&data->input, c, cursor, len);
 	}
 	return (0);
+}
+
+/**
+ * @brief Prompt ends.
+ */
+void	end_of_prompt(t_minishell *data)
+{
+	disable_raw_mode(data);
+	append_to_history(&data->input, &data->history);
 }
 
 /**
@@ -121,12 +151,12 @@ char	*listen_input(int fd, t_minishell *data)
 		{
 			if (data->input)
 				free(data->input);
-			return (NULL); // error or EOF
+			return (NULL);
 		}
 		if (manage_char(&c, data, &cursor, &input_len))
 			break ;
 	}
-	append_to_history(&data->input, &data->history);
+	end_of_prompt(data);
 	return (data->input);
 }
 
