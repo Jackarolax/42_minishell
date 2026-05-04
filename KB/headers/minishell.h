@@ -1,4 +1,3 @@
-// only do last
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
@@ -12,22 +11,15 @@
 
 extern volatile sig_atomic_t g_signal;
 
-typedef enum s_token_info
+typedef enum e_token_type
 {
-	ARGUMENT,
-	COMMAND,
-	BUILT_IN_CD,
-	BUILT_IN_ECHO,
-	BUILT_IN_PWD,
-	BUILT_IN_EXPORT,
-	BUILT_IN_UNSET,
-	BUILT_IN_ENV,
-	BUILT_IN_EXIT,
-	PIPE,
-	REDIRECT_IN,
-	REDIRECT_OUT,
-	RERIRECT_OUT_APPEND
-}	e_token_info;
+	TOKEN_WORD,
+	TOKEN_PIPE,
+	TOKEN_REDIR_IN,
+	TOKEN_REDIR_OUT,
+	TOKEN_HEREDOC,
+	TOKEN_APPEND
+}	t_token_type;
 
 /**
  *
@@ -44,8 +36,8 @@ typedef struct s_env_vars
  */
 typedef struct s_token
 {
-	char			*token;
-	e_token_info	token_info;
+	char			*value;
+	t_token_type	type;
 	struct s_token	*next;
 }				t_token;
 
@@ -61,9 +53,14 @@ typedef struct s_minishell
 {
 	char			*input;
 	t_history		history;
+	t_token			*tokens;
 	t_env_vars		*processed_env;
 	struct termios	orig_settings;
 }	t_minishell;
+
+// input_utils.c
+
+int	check_input(char *input);
 
 /* history.c */
 
@@ -72,13 +69,18 @@ void	append_to_history(char **input, t_history *history);
 
 // src/input
 
-void arrow_keys(t_history *history, char **input, long *cursor, long *len);
-char *delete_char(char *str, long pos);
-char *insert_char(char *str, char c, long pos);
+void	arrow_keys(t_history *history, char **input, long *cursor, long *len);
+char	*delete_char(char *str, long pos);
+char	*insert_char(char *str, char c, long pos);
 
 // src/main
 
-void	write_prompt(void);
+void	init_prompt(t_minishell *data);
+
+// lexer.c
+
+t_token	*lexer(char *input);
+void	update_quote_state(char c, int *quote_state);
 
 /* raw_mode.c */
 
