@@ -1,5 +1,17 @@
 # Tasks
 
+### Chores
+
+- [ ] clean up the header
+- [ ] nicer prompt maybe
+- [ ] norminette the code
+
+### TODOs
+
+- [ ] append built in commands to execution
+- [ ] allow execution from path "./bin/..." by checking after the . or ..
+- [ ] make the cleanup function
+
 ### Parsing
 - [X] Read input
   - [X] Handle signals here maybe
@@ -7,12 +19,12 @@
   - [X] Get line
   - [X] Split line into tokens
   - [X] Handle quotes `'`,`"`
-  - [ ] Handle escape characters
-  - [ ] Handle metacharacters
+  - [X] Handle escape characters
+  - [X] Handle metacharacters
     - Remarks: Characters like redirects and the heredoc is parsed as a token on a list
 - [X] Parsing
   - [X] Build command structures from tokens
-  - [ ] Handle Syntax errors
+  - [X] Handle Syntax errors
 
 ### Commands
 - [ ] Built-in commands
@@ -39,15 +51,16 @@
   - [ ] `unset`
   - [ ] `env`
   - [ ] `exit`
-- [ ] Pipes and Redirection
-  - [ ] `|` output of one command to the next command
+- [X] Pipes and Redirection
+  - [X] `|` output of one command to the next command
   - [ ] `>` redirect output
   - [ ] `<` redirect input
   - [ ] `<<` should be given a delimiter, it will read the input until the delimiter is seen. It doesn't have to update history.
   - Note: do check manual and heredoc
-- [ ] External commands
+- [X] External commands
   - [ ] Handle `$ENV` outputting proper commands
   - [ ] Handle error for non-existing commands
+    - Remarks: to test
 
 ### Interactive mode
 - [X] `ctrl + D` exits the shell
