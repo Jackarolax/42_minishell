@@ -6,7 +6,7 @@
 /*   By: kmonjard <kmonjard@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/05 00:05:20 by kmonjard          #+#    #+#             */
-/*   Updated: 2026/05/05 00:05:21 by kmonjard         ###   ########.fr       */
+/*   Updated: 2026/05/05 14:19:00 by kmonjard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,6 +100,8 @@ void	run_child(t_cmd *cmd, t_minishell *data, int prev_fd, int fd[2])
 		ft_putstr_fd(": command not found\n", 2);
 		exit(127);
 	}
+
+	// also, noted that fresh_env is freed anyway after going into execve?
 	char **fresh_env = convert_env_to_array(data->processed_env); // somehow this fixes env
 	execve(cmd_path, cmd->args, fresh_env);
 	perror("execve");

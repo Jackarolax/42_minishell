@@ -76,6 +76,8 @@ typedef struct s_minishell
 
 char	**convert_env_to_array(t_env_vars *env_list);
 t_env_vars	*get_env_node(t_env_vars *list, char *target_key);
+void	cleanup_loop(t_minishell *data);
+void	cleanup_shell(t_minishell *data);
 
 // commands
 
