@@ -99,7 +99,7 @@ int main(int argc, char **argv, char **envp)
 		data.cmds = tokens_to_cmds(data.tokens);
 //		print_cmds(data.cmds);
 		execute(data.cmds, &data);
-		cleanup();
+//		cleanup(); TODO
 	}
 	return (g_signal);
 }
