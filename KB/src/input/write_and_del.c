@@ -6,14 +6,15 @@
 /*   By: kmonjard <kmonjard@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/09 14:04:37 by kmonjard          #+#    #+#             */
-/*   Updated: 2026/05/09 14:06:03 by kmonjard         ###   ########.fr       */
+/*   Updated: 2026/05/09 15:05:18 by kmonjard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
 /**
- *
+ * @brief Handles characters that are printable. Moves and writes
+ * accordingly with cursor and input len.
  */
 void	printable(char **input, char *c, long *cursor, long *input_len)
 {
@@ -37,7 +38,8 @@ void	printable(char **input, char *c, long *cursor, long *input_len)
 }
 
 /**
- * @brief
+ * @brief Handles deleting characters. Moves the prompt along
+ * the positon to delete the character.
  */
 void	backspace(char **input, long *cursor, long *input_len)
 {

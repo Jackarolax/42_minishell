@@ -6,7 +6,7 @@
 /*   By: kmonjard <kmonjard@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/05 00:03:44 by kmonjard          #+#    #+#             */
-/*   Updated: 2026/05/09 13:54:19 by kmonjard         ###   ########.fr       */
+/*   Updated: 2026/05/09 15:02:27 by kmonjard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,9 @@ void	reset_history(t_history *history)
 	}
 }
 
+/**
+ * @brief Initialize the new history string.
+ */
 static void	init_new_history(t_history **his, long *c, char **new, char **in)
 {
 	long	count;

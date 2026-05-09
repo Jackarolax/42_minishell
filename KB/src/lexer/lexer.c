@@ -6,7 +6,7 @@
 /*   By: kmonjard <kmonjard@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/05 00:02:58 by kmonjard          #+#    #+#             */
-/*   Updated: 2026/05/09 13:54:18 by kmonjard         ###   ########.fr       */
+/*   Updated: 2026/05/09 15:08:42 by kmonjard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,9 @@ void	update_quote_state(char c, int *quote_state)
 		*quote_state = 0;
 }
 
+/**
+ * @brief Handles redirects that have two characters.
+ */
 static int	handle_double_ops(char *input, int i, t_token **list)
 {
 	if (input[i] == '<' && input[i + 1] == '<')
@@ -70,7 +73,7 @@ static int	handle_operator(char *input, int i, t_token **list)
 }
 
 /**
- *
+ * @brief Initializes the token of a word and appends it on the list.
  */
 static size_t	init_token(char *input, char **word, size_t *i, t_token **list)
 {

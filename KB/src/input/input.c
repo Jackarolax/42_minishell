@@ -6,7 +6,7 @@
 /*   By: kmonjard <kmonjard@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/05 00:03:56 by kmonjard          #+#    #+#             */
-/*   Updated: 2026/05/09 14:51:51 by kmonjard         ###   ########.fr       */
+/*   Updated: 2026/05/09 15:01:23 by kmonjard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ static char	*end_of_text(t_minishell *data)
 }
 
 /**
- * @brief Wrapper to handle CTRCTRLC
+ * @brief Wrapper to handle CTRL C
  */
 static int	ctrl_c(char **input, t_minishell *data)
 {

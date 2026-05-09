@@ -6,7 +6,7 @@
 /*   By: kmonjard <kmonjard@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/05 00:03:50 by kmonjard          #+#    #+#             */
-/*   Updated: 2026/05/05 00:04:52 by kmonjard         ###   ########.fr       */
+/*   Updated: 2026/05/09 15:03:24 by kmonjard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,9 @@ int	check_input(char *input)
 	return (1);
 }
 
-// Removes the character just BEFORE the given position
+/**
+ * @brief Deletes characters before the given position.
+ */
 char	*delete_char(char *str, long pos)
 {
 	char	*new_str;
