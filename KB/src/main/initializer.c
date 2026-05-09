@@ -6,7 +6,7 @@
 /*   By: kmonjard <kmonjard@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/05 00:04:11 by kmonjard          #+#    #+#             */
-/*   Updated: 2026/05/05 00:04:38 by kmonjard         ###   ########.fr       */
+/*   Updated: 2026/05/08 16:17:45 by kmonjard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,9 +16,9 @@
  * @brief A subtle check if SHLVL or PWD is not found.
  * This means the shell is level one.
  */
-static void	not_found_env(t_env_vars *env_copy)
+static void	not_found_env(t_env *env_copy)
 {
-	t_env_vars	*curr;
+	t_env		*curr;
 	int			bool_shlvl;
 	int			bool_pwd;
 
@@ -42,9 +42,9 @@ static void	not_found_env(t_env_vars *env_copy)
 /**
  * @brief Modify built in shell environment variables.
  */
-static void	update_variables(t_env_vars *env_copy)
+static void	update_variables(t_env *env_copy)
 {
-	t_env_vars	*curr;
+	t_env		*curr;
 	int			temp;
 
 	curr = env_copy;
@@ -72,31 +72,43 @@ static void	update_variables(t_env_vars *env_copy)
 }
 
 /**
+ * @brief Fills up the current env structure.
+ */
+static int	fill_env(t_env **env_copy, char **envp, t_env **cur)
+{
+	size_t	i;
+
+	i = 0;
+	while ((*envp)[i] != '=')
+		i++;
+	(*cur)->key = malloc(sizeof(char) * (i + 1));
+	if (!(*cur)->key)
+		return (free((*cur)), free_env(*env_copy), 1);
+	ft_strncpy((*cur)->key, *envp, i);
+	(*cur)->key[i] = '\0';
+	(*cur)->values = ft_split(*envp + i + 1, ':');
+	if (!(*cur)->values)
+		return (free((*cur)->key), free((*cur)), free_env(*env_copy), 1);
+	(*cur)->next = NULL;
+}
+
+/**
  * @brief Initialize a copy of the environment.
  */
-static void	initialize_env(t_env_vars **env_copy, char **envp)
+static int	initialize_env(t_env **env_copy, char **envp)
 {
-	int			i;
-	t_env_vars	*curr;
-	t_env_vars	*prev;
+	t_env	*curr;
+	t_env	*prev;
 
 	curr = NULL;
 	prev = NULL;
 	while (envp && *envp != NULL)
 	{
-		curr = malloc(sizeof(t_env_vars));
-		i = 0;
-		while ((*envp)[i] != '=')
-			i++;
-		curr->key = malloc(sizeof(char) * (i + 1));
-		if (!curr->key)
-			return ; // add error
-		ft_strncpy(curr->key, *envp, i);
-		curr->key[i] = '\0';
-		curr->values = ft_split(*envp + i + 1, ':'); // check
-		if (!curr->values)
-			return ;
-		curr->next = NULL;
+		curr = malloc(sizeof(t_env));
+		if (!curr)
+			return (free_env((*env_copy)), 1);
+		if (!fill_env(env_copy, envp, &curr))
+			return (1);
 		if ((*env_copy) == NULL)
 			(*env_copy) = curr;
 		else
@@ -105,6 +117,7 @@ static void	initialize_env(t_env_vars **env_copy, char **envp)
 		envp++;
 	}
 	update_variables((*env_copy));
+	return (0);
 }
 
 /**
@@ -123,4 +136,3 @@ void	initialize(int argc, char **argv, char **envp, t_minishell *data)
 	initialize_env(&data->processed_env, envp);
 	setup_signals();
 }
-

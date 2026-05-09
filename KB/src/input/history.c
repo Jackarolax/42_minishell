@@ -6,7 +6,7 @@
 /*   By: kmonjard <kmonjard@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/05 00:03:44 by kmonjard          #+#    #+#             */
-/*   Updated: 2026/05/05 00:04:57 by kmonjard         ###   ########.fr       */
+/*   Updated: 2026/05/09 13:54:19 by kmonjard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,23 @@ void	reset_history(t_history *history)
 		free(history->buffer);
 		history->buffer = NULL;
 	}
+}
+
+static void	init_new_history(t_history **his, long *c, char **new, char **in)
+{
+	long	count;
+
+	count = *c;
+	if ((*his)->history)
+	{
+		while ((*his)->history[(*c)])
+		{
+			new[(*c)] = (*his)->history[(*c)];
+			(*c)++;
+		}
+	}
+	new[(*c)] = ft_strdup((*in));
+	new[(*c) + 1] = NULL;
 }
 
 /**
@@ -49,16 +66,7 @@ void	append_to_history(char **input, t_history *history)
 	if (!new_history)
 		return ;
 	count = 0;
-	if (history->history)
-	{
-		while (history->history[count])
-		{
-			new_history[count] = history->history[count];
-			count++;
-		}
-	}
-	new_history[count] = ft_strdup((*input));
-	new_history[count + 1] = NULL;
+	init_new_history(&history, &count, new_history, input);
 	if (history->history)
 		free(history->history);
 	history->history_count = count + 1;

@@ -6,7 +6,7 @@
 /*   By: kmonjard <kmonjard@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/05 00:05:25 by kmonjard          #+#    #+#             */
-/*   Updated: 2026/05/05 14:19:03 by kmonjard         ###   ########.fr       */
+/*   Updated: 2026/05/09 13:54:17 by kmonjard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,9 +29,9 @@ char	*handle_absolute(char *cmd)
  * @brief Resolves the absolute path of a command.
  * Returns an allocated string with the path, or NULL if not found.
  */
-char	*get_cmd_path(char *cmd, t_env_vars *env_p)
+char	*get_cmd_path(char *cmd, t_env *env_p)
 {
-	t_env_vars	*path_node;
+	t_env		*path_node;
 	char		*path;
 	char		*part_path;
 	int			i;

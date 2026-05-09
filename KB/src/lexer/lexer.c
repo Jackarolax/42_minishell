@@ -6,66 +6,11 @@
 /*   By: kmonjard <kmonjard@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/05 00:02:58 by kmonjard          #+#    #+#             */
-/*   Updated: 2026/05/05 00:04:42 by kmonjard         ###   ########.fr       */
+/*   Updated: 2026/05/09 13:54:18 by kmonjard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-/**
- * @brief Safely frees the entire token linked list.
- */
-static void	free_token_list(t_token *list)
-{
-	t_token *temp;
-
-	while (list != NULL)
-	{
-		temp = list->next;
-		if (list->value)
-			free(list->value);
-		free(list);
-		list = temp;
-	}
-}
-
-/**
- * @brief Appends a token node to the end of the token linked list.
- */
-static void	add_token_back(t_token **list, t_token *new_node)
-{
-	t_token *current;
-
-	if (!list || !new_node)
-		return ;
-	if (*list == NULL)
-	{
-		*list = new_node;
-		return ;
-	}
-	current = *list;
-	while (current->next != NULL)
-	{
-		current = current->next;
-	}
-	current->next = new_node;
-}
-
-/**
- * @brief Allocates and initializes a new token node.
- */
-static t_token	*new_token(char *value, t_token_type type)
-{
-	t_token *token;
-
-	token = malloc(sizeof(t_token));
-	if (!token)
-		return (NULL);
-	token->value = value;
-	token->type = type;
-	token->next = NULL;
-	return (token);
-}
 
 /**
  * @brief Updates the quote state integer based on the current character.
@@ -83,27 +28,7 @@ void	update_quote_state(char c, int *quote_state)
 		*quote_state = 0;
 }
 
-static int	get_token_len(char *str)
-{
-	int i = 0;
-	int quote_state = 0;
-
-	while (str[i])
-	{
-		update_quote_state(str[i], &quote_state);
-		if (quote_state == 0 &&
-			(str[i] == ' ' || str[i] == '\t' || str[i] == '|' ||
-			 str[i] == '<' || str[i] == '>'))
-		{
-			break;
-		}
-		i++;
-	}
-	return (i);
-}
-
-// Returns how many characters it consumed (1 or 2)
-static int	handle_operator(char *input, int i, t_token **list)
+static int	handle_double_ops(char *input, int i, t_token **list)
 {
 	if (input[i] == '<' && input[i + 1] == '<')
 	{
@@ -115,6 +40,17 @@ static int	handle_operator(char *input, int i, t_token **list)
 		add_token_back(list, new_token(ft_strdup(">>"), TOKEN_APPEND));
 		return (2);
 	}
+}
+
+/**
+ * @brief Handle quotes and double quotes and pipes.
+ * Returns how many characters it consumed (1 or 2)
+ */
+static int	handle_operator(char *input, int i, t_token **list)
+{
+	if ((input[i] == '<' && input[i + 1] == '<')
+		|| ((input[i] == '>' && input[i + 1] == '>')))
+		return (handle_double_ops(input, i, list));
 	else if (input[i] == '<')
 	{
 		add_token_back(list, new_token(ft_strdup("<"), TOKEN_REDIR_IN));
@@ -134,19 +70,33 @@ static int	handle_operator(char *input, int i, t_token **list)
 }
 
 /**
+ *
+ */
+static size_t	init_token(char *input, char **word, size_t *i, t_token **list)
+{
+	size_t	len;
+
+	len = 0;
+	len = get_token_len(&input[(*i)]);
+	(*word) = ft_substr(input, (*i), len);
+	add_token_back(&(*list), new_token((*word), TOKEN_WORD));
+	return (len);
+}
+
+/**
  * @brief Parse the input into tokens for processing.
  */
-t_token *lexer(char *input)
+t_token	*lexer(char *input)
 {
 	t_token	*list;
-	size_t	i = 0;
-	size_t	len = 0;
+	size_t	i;
 	char	*word;
-
 
 	if (!input)
 		return (NULL);
 	list = NULL;
+	i = 0;
+	word = NULL;
 	while (input[i])
 	{
 		while (ft_isspace(input[i]))
@@ -154,16 +104,9 @@ t_token *lexer(char *input)
 		if (input[i] == '\0')
 			break ;
 		if (input[i] == '|' || input[i] == '<' || input[i] == '>')
-		{
 			i += handle_operator(input, i, &list);
-		}
 		else
-		{
-			len = get_token_len(&input[i]);
-			word = ft_substr(input, i, len);
-			add_token_back(&list, new_token(word, TOKEN_WORD));
-			i += len;
-		}
+			i += init_token(input, &word, &i, &list);
 	}
 	return (list);
 }

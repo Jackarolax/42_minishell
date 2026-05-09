@@ -12,6 +12,9 @@
 
 extern volatile sig_atomic_t g_signal;
 
+/**
+ *
+ */
 typedef enum e_token_type
 {
 	TOKEN_WORD,
@@ -22,6 +25,9 @@ typedef enum e_token_type
 	TOKEN_APPEND
 }	t_token_type;
 
+/**
+ *
+ */
 typedef struct s_cmd
 {
 	char			**args;
@@ -35,12 +41,12 @@ typedef struct s_cmd
 /**
  *
  */
-typedef struct s_env_vars
+typedef struct s_env
 {
-	char		*key;
-	char		**values;
-	struct s_env_vars	*next;
-}	t_env_vars;
+	char				*key;
+	char				**values;
+	struct s_env		*next;
+}	t_env;
 
 /**
  *
@@ -52,6 +58,9 @@ typedef struct s_token
 	struct s_token	*next;
 }				t_token;
 
+/**
+ *
+ */
 typedef struct s_history
 {
 	unsigned long	history_count;
@@ -69,19 +78,48 @@ typedef struct s_minishell
 	t_history		history;
 	t_token			*tokens;
 	t_cmd			*cmds;
-	t_env_vars		*processed_env;
+	t_env		*processed_env;
 	char			**envp;
 	struct termios	orig_settings;
 }	t_minishell;
 
-char	**convert_env_to_array(t_env_vars *env_list);
-t_env_vars	*get_env_node(t_env_vars *list, char *target_key);
+// test
+void print_str_array(char **array, char *name);
+
+void	write_prompt(void);
+void	end_of_prompt(t_minishell *data);
+
+void	backspace(char **input, long *cursor, long *input_len);
+void	printable(char **input, char *c, long *cursor, long *input_len);
+
+t_token	*new_token(char *value, t_token_type type);
+void	add_token_back(t_token **list, t_token *new_node);
+int		get_token_len(char *str);
+
+t_cmd	*init_cmd(t_token *curr_start);
+void	add_cmd_back(t_cmd **list, t_cmd *new_cmd);
+
+char	**convert_env_to_array(t_env *env_list);
+t_env	*get_env_node(t_env *list, char *target_key);
 void	cleanup_loop(t_minishell *data);
 void	cleanup_shell(t_minishell *data);
 
+void	handle_pipes(t_cmd *cmd, int *prev_fd, int fd[2]);
+void	infile(t_cmd *cmd);
+void	outfile(t_cmd *cmd);
+
+void	free_tokens(t_token *tokens);
+void	free_env(t_env *env_list);
+void	free_cmds(t_cmd *cmds);
+void	free_str_arrays(char **str);
+
+void	add_cmd_back(t_cmd **list, t_cmd *new_cmd);
+t_cmd	*init_cmd(t_token *curr_start);
+int		count_args(t_token *curr);
+
 // commands
 
-char	*get_cmd_path(char *cmd, t_env_vars *env_p);
+char	*get_cmd_path(char *cmd, t_env *env_p);
 
 // input_utils.c
 
@@ -119,7 +157,7 @@ void	disable_raw_mode(t_minishell *data);
 
 /* environment.c */
 
-void	add_env_var(t_env_vars *copy, char *key, char *value);
+void	add_env_var(t_env *copy, char *key, char *value);
 
 /* inbuilts.c */
 
@@ -129,7 +167,7 @@ void 	ft_pwd();
 
 /* execute.c */
 
-void	perform_tokens(t_list *tokens, t_env_vars **copy);
+void	perform_tokens(t_list *tokens, t_env **copy);
 
 /* signals.c */
 

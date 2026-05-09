@@ -6,7 +6,7 @@
 /*   By: kmonjard <kmonjard@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/05 00:05:33 by kmonjard          #+#    #+#             */
-/*   Updated: 2026/05/05 14:19:06 by kmonjard         ###   ########.fr       */
+/*   Updated: 2026/05/09 13:54:14 by kmonjard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 /**
  * @brief Takes a char ** of values and stitches them together with ':'
  */
-char *stitch_env_values(char **values)
+char	*stitch_env_values(char **values)
 {
 	char	*result;
 	char	*temp;
@@ -40,17 +40,37 @@ char *stitch_env_values(char **values)
 }
 
 /**
+ * @brief Fills each env array index
+ */
+static int	fill_envp_arr(t_env **curr, char ***envp, int *i)
+{
+	char	*stitched_val;
+	char	*key_with_equals;
+
+	stitched_val = stitch_env_values((*curr)->values);
+	key_with_equals = ft_strjoin((*curr)->key, "=");
+	(*envp)[(*i)] = ft_strjoin(key_with_equals, stitched_val);
+	free(stitched_val);
+	free(key_with_equals);
+	(*i)++;
+	(*curr) = (*curr)->next;
+	return (1);
+}
+
+/**
  * @brief Converts a custom env linked list into a standard char **envp
  */
-char	**convert_env_to_array(t_env_vars *env_list)
+char	**convert_env_to_array(t_env *env_list)
 {
-	t_env_vars	*curr = env_list;
+	t_env		*curr;
 	char		**envp;
-	int			count = 0;
-	int			i = 0;
-	char		*stitched_val;
-	char		*key_with_equals;
+	int			count;
+	int			i;
 
+	curr = env_list;
+	envp = NULL;
+	count = 0;
+	i = 0;
 	while (curr)
 	{
 		count++;
@@ -62,14 +82,8 @@ char	**convert_env_to_array(t_env_vars *env_list)
 	curr = env_list;
 	while (curr)
 	{
-		stitched_val = stitch_env_values(curr->values);
-		key_with_equals = ft_strjoin(curr->key, "=");
-		envp[i] = ft_strjoin(key_with_equals, stitched_val);
-		free(stitched_val);
-		free(key_with_equals);
-
-		i++;
-		curr = curr->next;
+		if (!fill_envp_arr(&curr, &envp, &i))
+			return (free_str_arrays(envp), NULL);
 	}
 	return (envp);
 }
@@ -77,9 +91,9 @@ char	**convert_env_to_array(t_env_vars *env_list)
 /**
  * @brief Retrieve node of target key from list.
  */
-t_env_vars	*get_env_node(t_env_vars *list, char *target_key)
+t_env	*get_env_node(t_env *list, char *target_key)
 {
-	t_env_vars	*curr;
+	t_env	*curr;
 
 	curr = list;
 	while (curr)
@@ -95,18 +109,20 @@ t_env_vars	*get_env_node(t_env_vars *list, char *target_key)
  * @brief Appends a newly allocated environment variable to the
  * env_vars structure. Will also work for an empty list.
  */
-void	add_env_var(t_env_vars *copy, char *key, char *value)
+void	add_env_var(t_env *copy, char *key, char *value)
 {
-	t_env_vars	*curr;
-	t_env_vars	*new_node;
+	t_env	*curr;
+	t_env	*new_node;
 
-	new_node = malloc(sizeof(t_env_vars));
+	new_node = malloc(sizeof(t_env));
 	if (!new_node)
 		ft_putstr_fd("Error: ", STDERR_FILENO);
 	new_node->key = ft_strdup(key);
 	new_node->values = malloc(sizeof(char *) * 2);
 	if (!new_node->values)
-
+	{
+		ft_putstr_fd("shelld0n: malloc", STDERR_FILENO);
+	}
 	new_node->values[0] = ft_strdup(value);
 	new_node->values[1] = NULL;
 	new_node->next = NULL;

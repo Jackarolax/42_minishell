@@ -6,104 +6,86 @@
 /*   By: kmonjard <kmonjard@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/05 00:05:17 by kmonjard          #+#    #+#             */
-/*   Updated: 2026/05/05 14:19:05 by kmonjard         ###   ########.fr       */
+/*   Updated: 2026/05/07 21:24:38 by kmonjard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
 /**
- * @brief Counts tokens until the next pipe to size the args array safely.
+ * @brief Fills in commands with redirects.
  */
-static int	count_args(t_token *curr)
+static void	fill_redirs(t_token **tok, t_cmd **cmd)
 {
-	int count = 0;
-	while (curr && curr->type != TOKEN_PIPE)
+	int	append;
+
+	if ((*tok)->type == TOKEN_REDIR_OUT || (*tok)->type == TOKEN_APPEND)
 	{
-		count++;
-		curr = curr->next;
+		if ((*tok)->type == TOKEN_APPEND)
+			append = 1;
+		else
+			append = 0;
+		(*cmd)->append = append;
+		(*tok) = (*tok)->next;
+		if ((*tok))
+			(*cmd)->outfile = (*tok)->value;
 	}
-	return (count);
+	else if ((*tok)->type == TOKEN_REDIR_IN)
+	{
+		(*tok) = (*tok)->next;
+		if ((*tok))
+			(*cmd)->infile = (*tok)->value;
+	}
 }
 
 /**
- * @brief Allocates a new command node and its arguments array.
+ * @brief Fills in commands, heredocs and calls redir filler.
  */
-static t_cmd	*init_cmd(t_token *curr_start)
+static void	fill_cmd(t_token **tok, t_cmd **curr, int *i)
 {
-	t_cmd	*cmd;
-	int		max_args;
-
-	cmd = ft_calloc(1, sizeof(t_cmd));
-	if (!cmd)
-		return (NULL);
-	max_args = count_args(curr_start);
-	cmd->args = ft_calloc(max_args + 1, sizeof(char *));
-	return (cmd);
-}
-
-static void	add_cmd_back(t_cmd **list, t_cmd *new_cmd)
-{
-	t_cmd *current;
-
-	if (!list || !new_cmd)
-		return ;
-	if (*list == NULL)
+	if ((*tok)->type == TOKEN_WORD)
 	{
-		*list = new_cmd;
-		return ;
+		(*curr)->args[(*i)] = (*tok)->value;
+		(*i)++;
 	}
-	current = *list;
-	while (current->next != NULL)
-		current = current->next;
-	current->next = new_cmd;
+	else if ((*tok)->type == TOKEN_HEREDOC)
+	{
+		(*curr)->heredoc = 1;
+		(*tok) = (*tok)->next;
+		if ((*tok))
+			(*curr)->infile = (*tok)->value;
+	}
+	else
+		fill_redirs(tok, curr);
 }
 
 /**
- *
+ * @brief Converts each token to command structure for easier parsing later on.
+ * Along with their args.
  */
 t_cmd	*tokens_to_cmds(t_token *tokens)
 {
-	t_cmd	*head = NULL;
-	t_cmd	*curr_cmd = NULL;
-	t_token	*curr_tok = tokens;
-	int		i = 0;
+	int		i;
+	t_cmd	*head;
+	t_cmd	*curr_cmd;
+	t_token	*curr_tok;
 
+	i = 0;
+	head = NULL;
+	curr_cmd = NULL;
+	curr_tok = tokens;
 	while (curr_tok)
 	{
 		if (!curr_cmd)
 		{
 			curr_cmd = init_cmd(curr_tok);
 			add_cmd_back(&head, curr_cmd);
-			i = 0; // Reset argument index for the new command
+			i = 0;
 		}
 		if (curr_tok->type == TOKEN_PIPE)
 			curr_cmd = NULL;
-		else if (curr_tok->type == TOKEN_REDIR_OUT || curr_tok->type == TOKEN_APPEND)
-		{
-			curr_cmd->append = (curr_tok->type == TOKEN_APPEND) ? 1 : 0;
-			curr_tok = curr_tok->next;
-			if (curr_tok)
-				curr_cmd->outfile = curr_tok->value;
-		}
-		else if (curr_tok->type == TOKEN_REDIR_IN)
-		{
-			curr_tok = curr_tok->next;
-			if (curr_tok)
-				curr_cmd->infile = curr_tok->value;
-		}
-		else if (curr_tok->type == TOKEN_HEREDOC)
-		{
-			curr_cmd->heredoc = 1;
-			curr_tok = curr_tok->next;
-			if (curr_tok)
-				curr_cmd->infile = curr_tok->value;
-		}
-		else if (curr_tok->type == TOKEN_WORD)
-		{
-			curr_cmd->args[i] = curr_tok->value;
-			i++;
-		}
+		else
+			fill_cmd(&curr_tok, &curr_cmd, &i);
 		if (curr_tok)
 			curr_tok = curr_tok->next;
 	}

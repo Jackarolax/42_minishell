@@ -6,7 +6,7 @@
 /*   By: kmonjard <kmonjard@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/05 00:03:14 by kmonjard          #+#    #+#             */
-/*   Updated: 2026/05/05 00:04:59 by kmonjard         ###   ########.fr       */
+/*   Updated: 2026/05/09 14:18:36 by kmonjard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,9 @@ static void	up(t_history *history, char **input, long *cursor, long *line_len)
 				history->buffer = ft_strdup("");
 		}
 		history->history_index--;
-		write(1, "\r$> \033[K", 8);
+		write(1, "\r", 1);
+		write_prompt();
+		write(1, "\033[K", 3);
 		if ((*input))
 			free((*input));
 		(*input) = ft_strdup(history->history[history->history_index]);
@@ -52,7 +54,9 @@ static void	down(t_history *history, char **input, long *cursor, long *line_len)
 	if (history->history_index < history->history_count)
 	{
 		history->history_index++;
-		write(1, "\r$> \033[K", 8);
+		write(1, "\r", 1);
+		write_prompt();
+		write(1, "\033[K", 3);
 		if ((*input))
 			free((*input));
 		if (history->history_index == history->history_count)
@@ -98,7 +102,7 @@ static void	right(long *cursor, long *len)
 /**
  * @brief Manages all arrow key inputs. Up, down, left and right keys.
  */
-void arrow_keys(t_history *history, char **input, long *cursor, long *len)
+void	arrow_keys(t_history *history, char **input, long *cursor, long *len)
 {
 	char	seq[2];
 

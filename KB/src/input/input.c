@@ -6,57 +6,12 @@
 /*   By: kmonjard <kmonjard@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/05 00:03:56 by kmonjard          #+#    #+#             */
-/*   Updated: 2026/05/05 00:04:50 by kmonjard         ###   ########.fr       */
+/*   Updated: 2026/05/09 14:23:37 by kmonjard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-/**
- *
- */
-static void	printable(char **input, char *c, long *cursor, long *input_len)
-{
-	long	moves_back;
-
-	moves_back = 0;
-	(*input) = insert_char((*input), (*c), (*cursor));
-	(*cursor)++;
-	(*input_len)++;
-	if ((*cursor) == (*input_len))
-		write(1, c, 1);
-	else
-	{
-		write(1, c, 1);
-		write(1, "\033[K", 3);
-		ft_putstr_fd(&(*input)[(*cursor)], 1);
-		moves_back = (*input_len) - (*cursor);
-		while (moves_back-- > 0)
-			write(1, "\033[D", 3);
-	}
-}
-
-/**
- * @brief
- */
-static void	backspace(char **input, long *cursor, long *input_len)
-{
-	long	moves_back;
-
-	moves_back = 0;
-	(*input) = delete_char((*input), (*cursor));
-	(*cursor)--;
-	(*input_len)--;
-	write(1, "\b", 1);
-	write(1, "\033[K", 3);
-	if (cursor < input_len)
-	{
-		ft_putstr_fd(&(*input)[(*cursor)], 1);
-		moves_back = (*input_len) - (*cursor);
-		while (moves_back-- > 0)
-			write(1, "\033[D", 3);
-	}
-}
 static char	*end_of_text(t_minishell *data)
 {
 	write(1, "^C\n", 3);
@@ -74,7 +29,7 @@ static char	*end_of_text(t_minishell *data)
  * write the newline, puts an empty string in input if it is empty
  * and returns 1. Else if c is a EOT (End of Transmission), then exit the shell.
  */
-static int	manage_exits(char *c, char **input, long *input_len, t_minishell *data)
+static int	manage_exits(char *c, char **input, long *len, t_minishell *data)
 {
 	if ((*c) == '\n' || (*c) == '\r')
 	{
@@ -85,7 +40,7 @@ static int	manage_exits(char *c, char **input, long *input_len, t_minishell *dat
 	}
 	else if ((*c) == 4)
 	{
-		if ((*input_len) == 0)
+		if ((*len) == 0)
 		{
 			write(1, "\nexit\n", 6);
 			if ((*input))
@@ -97,14 +52,9 @@ static int	manage_exits(char *c, char **input, long *input_len, t_minishell *dat
 		}
 	}
 	else if ((*c) == 3)
-	{
-		(*input) = end_of_text(data);
-		return (1);
-	}
+		return ((*input) = end_of_text(data), 1);
 	return (0);
 }
-
-
 
 /**
  * @brief Manage character and exits.
@@ -128,15 +78,6 @@ static int	manage_char(char *c, t_minishell *data, long *cursor, long *len)
 			printable(&data->input, c, cursor, len);
 	}
 	return (0);
-}
-
-/**
- * @brief Prompt ends.
- */
-void	end_of_prompt(t_minishell *data)
-{
-	disable_raw_mode(data);
-	append_to_history(&data->input, &data->history);
 }
 
 /**
@@ -171,4 +112,3 @@ char	*listen_input(int fd, t_minishell *data)
 	end_of_prompt(data);
 	return (data->input);
 }
-

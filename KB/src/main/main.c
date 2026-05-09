@@ -77,6 +77,64 @@ void print_cmds(t_cmd *cmds)
 }
 
 /**
+ * @brief Utility to print any NULL-terminated string array.
+ * Perfect for debugging your command arguments or tokens.
+ */
+void print_str_array(char **array, char *name)
+{
+	int i;
+
+	if (name)
+		printf("--- Printing Array: %s ---\n", name);
+	if (!array)
+	{
+		printf("(null array)\n");
+		return ;
+	}
+	i = 0;
+	while (array[i])
+	{
+		printf("[%d]: %s\n", i, array[i]);
+		i++;
+	}
+	printf("--------------------------\n");
+}
+
+/**
+ * @brief Prints the environment linked list with its 2D value arrays.
+ */
+void print_env_list(t_env *env)
+{
+	t_env   *curr;
+	int     i;
+
+	curr = env;
+	printf("\n========= ENV LINKED LIST =========\n");
+	if (!curr)
+		printf("Empty List\n");
+	while (curr)
+	{
+		printf("Key: %s\n", curr->key);
+		if (curr->values)
+		{
+			i = 0;
+			while (curr->values[i])
+			{
+				printf("  Value[%d]: %s\n", i, curr->values[i]);
+				i++;
+			}
+		}
+		else
+			printf("  Value: (NULL)\n");
+
+		curr = curr->next;
+		if (curr)
+			printf("      |\n      v\n");
+	}
+	printf("===================================\n\n");
+}
+
+/**
  *
  */
 int main(int argc, char **argv, char **envp)
@@ -84,6 +142,7 @@ int main(int argc, char **argv, char **envp)
 	t_minishell	data;
 
 	initialize(argc, argv, envp, &data);
+	print_env_list(data.processed_env);
 	while (1)
 	{
 		init_prompt(&data);
@@ -96,8 +155,9 @@ int main(int argc, char **argv, char **envp)
 			continue ;
 		}
 		data.tokens = lexer(data.input);
+		print_tokens(data.tokens);
 		data.cmds = tokens_to_cmds(data.tokens);
-//		print_cmds(data.cmds);
+		print_cmds(data.cmds);
 		execute(data.cmds, &data);
 		cleanup_loop(&data);
 	}

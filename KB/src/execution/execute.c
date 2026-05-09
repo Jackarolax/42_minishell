@@ -6,7 +6,7 @@
 /*   By: kmonjard <kmonjard@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/05 00:05:20 by kmonjard          #+#    #+#             */
-/*   Updated: 2026/05/05 14:19:00 by kmonjard         ###   ########.fr       */
+/*   Updated: 2026/05/09 13:54:15 by kmonjard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@
  */
 void	wait_all_children(void)
 {
-	int status;
+	int	status;
 
 	while (waitpid(-1, &status, 0) > 0)
 	{
@@ -53,59 +53,43 @@ void	wait_all_children(void)
  * determine whether to append or truncate. Passes 0644 as the default file
  * permissions. Then, it replaces its STDOUT with the out file's fd.
  *
- *
+ * In execve, any memory allocated once execve finishes frees the memory.
+ * Therefore, the fresh_env is always freed.
  */
 void	run_child(t_cmd *cmd, t_minishell *data, int prev_fd, int fd[2])
 {
-	if (prev_fd != -1)
-	{
-		dup2(prev_fd, STDIN_FILENO);
-		close(prev_fd);
-	}
-	if (cmd->next)
-	{
-		dup2(fd[1], STDOUT_FILENO);
-		close(fd[0]);
-		close(fd[1]);
-	}
+	char	**fresh_env;
+	char	*cmd_path;
+
+	handle_pipes(cmd, &prev_fd, fd);
 	if (cmd->infile)
-	{
-		int in_fd = open(cmd->infile, O_RDONLY);
-		if (in_fd < 0)
-		{
-			perror(cmd->infile); // error no file
-			exit(1);
-		}
-		dup2(in_fd, STDIN_FILENO);
-		close(in_fd);
-	}
+		infile(cmd);
 	if (cmd->outfile)
-	{
-		int flags = O_WRONLY | O_CREAT | (cmd->append ? O_APPEND : O_TRUNC);
-		int out_fd = open(cmd->outfile, flags, 0644);
-		if (out_fd < 0)
-		{
-			perror(cmd->outfile); // "out.txt: Permission denied"
-			exit(1);
-		}
-		dup2(out_fd, STDOUT_FILENO);
-		close(out_fd);
-	}
+		outfile(cmd);
 	if (!cmd->args[0])
 		exit(0);
-	char	*cmd_path = get_cmd_path(cmd->args[0], data->processed_env);
+	cmd_path = get_cmd_path(cmd->args[0], data->processed_env);
 	if (!cmd_path)
 	{
-		// add command not found here
 		ft_putstr_fd(": command not found\n", 2);
 		exit(127);
 	}
-
-	// also, noted that fresh_env is freed anyway after going into execve?
-	char **fresh_env = convert_env_to_array(data->processed_env); // somehow this fixes env
+	fresh_env = convert_env_to_array(data->processed_env);
+	print_str_array(fresh_env, "ENV in CHILD");
 	execve(cmd_path, cmd->args, fresh_env);
 	perror("execve");
 	exit(1);
+}
+
+void	run_parent(t_cmd *curr, int *prev_fd, int fd[2])
+{
+	if ((*prev_fd) != -1)
+		close((*prev_fd));
+	if (curr->next)
+	{
+		close(fd[1]);
+		(*prev_fd) = fd[0];
+	}
 }
 
 /**
@@ -143,15 +127,7 @@ void	execute(t_cmd *cmds, t_minishell *data)
 		if (pid == 0)
 			run_child(curr, data, prev_fd, fd);
 		else
-		{
-			if (prev_fd != -1)
-				close(prev_fd);
-			if (curr->next)
-			{
-				close(fd[1]);
-				prev_fd = fd[0];
-			}
-		}
+			run_parent(curr, &prev_fd, fd);
 		curr = curr->next;
 	}
 	wait_all_children();

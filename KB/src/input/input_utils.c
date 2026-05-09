@@ -19,9 +19,11 @@
  */
 int	check_input(char *input)
 {
-	int	i = 0;
-	int	quote_state = 0;
+	int	i;
+	int	quote_state;
 
+	i = 0;
+	quote_state = 0;
 	if (!input)
 		return (1);
 	while (input[i])
@@ -39,7 +41,7 @@ int	check_input(char *input)
 }
 
 // Removes the character just BEFORE the given position
-char *delete_char(char *str, long pos)
+char	*delete_char(char *str, long pos)
 {
 	char	*new_str;
 	long	len;
@@ -56,10 +58,10 @@ char *delete_char(char *str, long pos)
 	j = 0;
 	while (str[i])
 	{
-		if (i == pos - 1) // Skip the character we are deleting
+		if (i == pos - 1)
 		{
 			i++;
-			continue;
+			continue ;
 		}
 		new_str[j++] = str[i++];
 	}
