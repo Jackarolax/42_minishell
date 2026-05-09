@@ -1,16 +1,28 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   minishell.h                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: kmonjard <kmonjard@student.42berlin.de>    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/05/05 00:03:14 by kmonjard          #+#    #+#             */
+/*   Updated: 2026/05/09 14:31:18 by kmonjard         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <signal.h>
-#include <termios.h>
-#include <fcntl.h>
-#include "libft.h" // contains unistd.h
-#include "ft_printf.h"
-#include "minishell.h"
+# include <stdio.h>
+# include <stdlib.h>
+# include <signal.h>
+# include <termios.h>
+# include <fcntl.h>
+# include "libft.h" // contains unistd.h
+# include "ft_printf.h"
+# include "minishell.h"
 
-extern volatile sig_atomic_t g_signal;
+extern volatile sig_atomic_t	g_signal;
 
 /**
  *
@@ -78,13 +90,13 @@ typedef struct s_minishell
 	t_history		history;
 	t_token			*tokens;
 	t_cmd			*cmds;
-	t_env		*processed_env;
+	t_env			*processed_env;
 	char			**envp;
 	struct termios	orig_settings;
 }	t_minishell;
 
 // test
-void print_str_array(char **array, char *name);
+void	print_str_array(char **array, char *name);
 
 void	write_prompt(void);
 void	end_of_prompt(t_minishell *data);
@@ -123,7 +135,7 @@ char	*get_cmd_path(char *cmd, t_env *env_p);
 
 // input_utils.c
 
-int	check_input(char *input);
+int		check_input(char *input);
 
 /* history.c */
 
@@ -161,9 +173,9 @@ void	add_env_var(t_env *copy, char *key, char *value);
 
 /* inbuilts.c */
 
-void 	ft_echo(char **argv);
+void	ft_echo(char **argv);
 void	ft_cd(int argc, char **argv);
-void 	ft_pwd();
+void	ft_pwd(void);
 
 /* execute.c */
 

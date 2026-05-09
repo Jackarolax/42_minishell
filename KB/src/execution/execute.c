@@ -6,7 +6,7 @@
 /*   By: kmonjard <kmonjard@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/05 00:05:20 by kmonjard          #+#    #+#             */
-/*   Updated: 2026/05/09 13:54:15 by kmonjard         ###   ########.fr       */
+/*   Updated: 2026/05/09 14:41:06 by kmonjard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,11 +71,12 @@ void	run_child(t_cmd *cmd, t_minishell *data, int prev_fd, int fd[2])
 	cmd_path = get_cmd_path(cmd->args[0], data->processed_env);
 	if (!cmd_path)
 	{
-		ft_putstr_fd(": command not found\n", 2);
+		ft_putstr_fd(cmd->args[0], STDERR_FILENO);
+		ft_putstr_fd(": command not found\n", STDERR_FILENO);
+		cleanup_shell(data);
 		exit(127);
 	}
 	fresh_env = convert_env_to_array(data->processed_env);
-	print_str_array(fresh_env, "ENV in CHILD");
 	execve(cmd_path, cmd->args, fresh_env);
 	perror("execve");
 	exit(1);

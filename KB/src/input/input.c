@@ -6,7 +6,7 @@
 /*   By: kmonjard <kmonjard@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/05 00:03:56 by kmonjard          #+#    #+#             */
-/*   Updated: 2026/05/09 14:23:37 by kmonjard         ###   ########.fr       */
+/*   Updated: 2026/05/09 14:51:51 by kmonjard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,17 @@ static char	*end_of_text(t_minishell *data)
 		data->history.buffer = NULL;
 	}
 	return (ft_strdup(""));
+}
+
+/**
+ * @brief Wrapper to handle CTRCTRLC
+ */
+static int	ctrl_c(char **input, t_minishell *data)
+{
+	if (data->input)
+		free(data->input);
+	(*input) = end_of_text(data);
+	return (1);
 }
 
 /**
@@ -52,7 +63,7 @@ static int	manage_exits(char *c, char **input, long *len, t_minishell *data)
 		}
 	}
 	else if ((*c) == 3)
-		return ((*input) = end_of_text(data), 1);
+		return (ctrl_c(input, data));
 	return (0);
 }
 

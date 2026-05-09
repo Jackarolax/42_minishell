@@ -6,7 +6,7 @@
 /*   By: kmonjard <kmonjard@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/05 00:05:25 by kmonjard          #+#    #+#             */
-/*   Updated: 2026/05/09 13:54:17 by kmonjard         ###   ########.fr       */
+/*   Updated: 2026/05/09 14:41:45 by kmonjard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@ char	*handle_absolute(char *cmd)
 			return (ft_strdup(cmd));
 		return (NULL);
 	}
+	return (NULL);
 }
 
 /**

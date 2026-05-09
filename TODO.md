@@ -4,13 +4,15 @@
 
 - [ ] clean up the header
 - [ ] nicer prompt maybe
-- [ ] norminette the code
+- [X] norminette the code
 
 ### TODOs
 
 - [ ] append built in commands to execution
-- [ ] allow execution from path "./bin/..." by checking after the . or ..
-- [ ] make the cleanup function
+- [X] allow execution from path "./bin/..." by checking after the . or ..
+- [X] make the cleanup function
+- [ ] check for input errors in redirections, check for every error tbh.
+- [X] free the buffer when CTRL C is pressed
 
 ### Parsing
 - [X] Read input
