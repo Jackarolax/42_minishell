@@ -6,36 +6,72 @@
 /*   By: kmonjard <kmonjard@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/05 00:05:17 by kmonjard          #+#    #+#             */
-/*   Updated: 2026/05/13 16:51:55 by kmonjard         ###   ########.fr       */
+/*   Updated: 2026/05/13 18:28:49 by kmonjard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
 /**
- * @brief Fills in commands with redirects.
+ * @brief Handles output redirection (> and >>),
+ * intermediate file creation,
+ * and safely updates pointer states.
+ */
+static void	handle_redir_out(t_token **tok, t_cmd **cmd, t_minishell *data)
+{
+	int		fd;
+	int		flags;
+	char	*file;
+
+	if ((*tok)->type == TOKEN_APPEND)
+		(*cmd)->append = 1;
+	else
+		(*cmd)->append = 0;
+	(*tok) = (*tok)->next;
+	if (!(*tok))
+		return ;
+	file = expansion((*tok)->value, data->processed_env);
+	if ((*cmd)->outfile)
+	{
+		if ((*cmd)->append)
+			flags = O_CREAT | O_WRONLY | O_APPEND;
+		else
+			flags = O_CREAT | O_WRONLY | O_TRUNC;
+		fd = open((*cmd)->outfile, flags, 0644);
+		if (fd >= 0)
+			close(fd);
+		free((*cmd)->outfile);
+	}
+	(*cmd)->outfile = file;
+}
+
+/**
+ * @brief Handles input redirection (<) and
+ * frees previously assigned input files.
+ */
+static void	handle_redir_in(t_token **tok, t_cmd **cmd, t_minishell *data)
+{
+	char	*file;
+
+	(*tok) = (*tok)->next;
+	if (!(*tok))
+		return ;
+	file = expansion((*tok)->value, data->processed_env);
+	if ((*cmd)->infile)
+		free((*cmd)->infile);
+	(*cmd)->infile = file;
+}
+
+/**
+ * @brief Fills in commands with redirects,
+ * delegating tasks to helpers.
  */
 static void	fill_redirs(t_token **tok, t_cmd **cmd, t_minishell *data)
 {
-	int	append;
-
 	if ((*tok)->type == TOKEN_REDIR_OUT || (*tok)->type == TOKEN_APPEND)
-	{
-		if ((*tok)->type == TOKEN_APPEND)
-			append = 1;
-		else
-			append = 0;
-		(*cmd)->append = append;
-		(*tok) = (*tok)->next;
-		if ((*tok))
-			(*cmd)->outfile = expansion((*tok)->value, data->processed_env);
-	}
+		handle_redir_out(tok, cmd, data);
 	else if ((*tok)->type == TOKEN_REDIR_IN)
-	{
-		(*tok) = (*tok)->next;
-		if ((*tok))
-			(*cmd)->infile = expansion((*tok)->value, data->processed_env);
-	}
+		handle_redir_in(tok, cmd, data);
 }
 
 /**

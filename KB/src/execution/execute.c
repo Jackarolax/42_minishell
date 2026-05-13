@@ -6,7 +6,7 @@
 /*   By: kmonjard <kmonjard@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/05 00:05:20 by kmonjard          #+#    #+#             */
-/*   Updated: 2026/05/13 17:52:33 by kmonjard         ###   ########.fr       */
+/*   Updated: 2026/05/13 18:12:30 by kmonjard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,9 +66,9 @@ void	run_child(t_cmd *cmd, t_minishell *data, int prev_fd, int fd[2])
 
 	handle_pipes(cmd, &prev_fd, fd);
 	if (cmd->infile)
-		infile(cmd);
+		infile(cmd, data);
 	if (cmd->outfile)
-		outfile(cmd);
+		outfile(cmd, data);
 	if (!cmd->args[0])
 		exit(0);
 	cmd_path = get_cmd_path(cmd->args[0], data->processed_env);

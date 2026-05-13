@@ -6,7 +6,7 @@
 /*   By: kmonjard <kmonjard@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/05 00:03:14 by kmonjard          #+#    #+#             */
-/*   Updated: 2026/05/13 17:55:03 by kmonjard         ###   ########.fr       */
+/*   Updated: 2026/05/13 18:04:49 by kmonjard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -132,8 +132,8 @@ void	cleanup_loop(t_minishell *data);
 void	cleanup_shell(t_minishell *data);
 
 void	handle_pipes(t_cmd *cmd, int *prev_fd, int fd[2]);
-void	infile(t_cmd *cmd);
-void	outfile(t_cmd *cmd);
+void	infile(t_cmd *cmd, t_minishell *data);
+void	outfile(t_cmd *cmd, t_minishell *data);
 
 void	free_tokens(t_token *tokens);
 void	free_env(t_env *env_list);
