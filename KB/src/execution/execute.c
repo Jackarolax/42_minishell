@@ -6,12 +6,13 @@
 /*   By: kmonjard <kmonjard@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/05 00:05:20 by kmonjard          #+#    #+#             */
-/*   Updated: 2026/05/13 18:12:30 by kmonjard         ###   ########.fr       */
+/*   Updated: 2026/05/13 18:39:33 by kmonjard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 #include <sys/wait.h>
+#include <sys/stat.h>
 
 /**
  * @brief Parent thread util.
@@ -39,6 +40,34 @@ void	wait_all_children(pid_t last_pid)
 	}
 	while (waitpid(-1, &status, 0) > 0)
 		;
+}
+
+/**
+ * @brief Validates if the command exists and is not a directory.
+ * Handles exits 127 (not found) and 126 (directory).
+ */
+static char	*validate_path(char *cmd_name, t_minishell *data)
+{
+	char		*path;
+	struct stat	path_stat;
+
+	path = get_cmd_path(cmd_name, data->processed_env);
+	if (!path)
+	{
+		ft_putstr_fd(cmd_name, STDERR_FILENO);
+		ft_putstr_fd(": command not found\n", STDERR_FILENO);
+		cleanup_shell(data);
+		exit(127);
+	}
+	if (stat(path, &path_stat) == 0 && S_ISDIR(path_stat.st_mode))
+	{
+		ft_putstr_fd(cmd_name, STDERR_FILENO);
+		ft_putstr_fd(": Is a directory\n", STDERR_FILENO);
+		free(path);
+		cleanup_shell(data);
+		exit(126);
+	}
+	return (path);
 }
 
 /**
@@ -71,17 +100,13 @@ void	run_child(t_cmd *cmd, t_minishell *data, int prev_fd, int fd[2])
 		outfile(cmd, data);
 	if (!cmd->args[0])
 		exit(0);
-	cmd_path = get_cmd_path(cmd->args[0], data->processed_env);
-	if (!cmd_path)
-	{
-		ft_putstr_fd(cmd->args[0], STDERR_FILENO);
-		ft_putstr_fd(": command not found\n", STDERR_FILENO);
-		cleanup_shell(data);
-		exit(127);
-	}
+	cmd_path = validate_path(cmd->args[0], data);
 	fresh_env = convert_env_to_array(data->processed_env);
 	execve(cmd_path, cmd->args, fresh_env);
 	perror("execve");
+	free_str_arrays(fresh_env);
+	free(cmd_path);
+	cleanup_shell(data);
 	exit(1);
 }
 
