@@ -6,7 +6,7 @@
 /*   By: kmonjard <kmonjard@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/05 00:03:14 by kmonjard          #+#    #+#             */
-/*   Updated: 2026/05/09 14:31:18 by kmonjard         ###   ########.fr       */
+/*   Updated: 2026/05/13 13:18:07 by kmonjard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,7 +82,11 @@ typedef struct s_history
 }	t_history;
 
 /**
+ * @brief shelld0n data
  *
+ * @param input the string inputted from the prompt
+ * @param history where history is stored
+ * @param tokens where the input is stored after preprocessing
  */
 typedef struct s_minishell
 {
@@ -97,6 +101,8 @@ typedef struct s_minishell
 
 // test
 void	print_str_array(char **array, char *name);
+
+void	modify_variables(t_env **curr);
 
 void	write_prompt(void);
 void	end_of_prompt(t_minishell *data);

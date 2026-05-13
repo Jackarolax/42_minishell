@@ -23,7 +23,7 @@ C_FILES = main/main.c main/prompt.c main/initializer.c env/environment.c \
 	lexer/lexer.c execution/execute.c execution/commands.c \
 	execution/path_resolver.c utils/cleanup.c execution/metacharacters.c \
 	utils/free_shell.c lexer/token.c execution/commands_utils.c \
-	input/write_and_del.c
+	input/write_and_del.c main/initializer_utils.c
 
 SRC = $(addprefix $(SRC_DIR)/, $(C_FILES))
 

@@ -20,7 +20,7 @@
  * @brief Print to STDOUT, passed string.
  * Checks for -n option.
  */
-void ft_echo(int argc, char **argv)
+void	ft_echo(int argc, char **argv)
 {
 	int no_last_line;
 	int i;
@@ -42,7 +42,7 @@ void ft_echo(int argc, char **argv)
  * @brief Print to STDOUT, "print working directory".
  * i.e. current directory
  */
-void ft_pwd()
+void	ft_pwd()
 {
 	char path[PATH_MAX];
 

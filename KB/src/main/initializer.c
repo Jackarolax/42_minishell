@@ -6,7 +6,7 @@
 /*   By: kmonjard <kmonjard@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/05 00:04:11 by kmonjard          #+#    #+#             */
-/*   Updated: 2026/05/08 16:17:45 by kmonjard         ###   ########.fr       */
+/*   Updated: 2026/05/13 13:17:06 by kmonjard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,27 +45,11 @@ static void	not_found_env(t_env *env_copy)
 static void	update_variables(t_env *env_copy)
 {
 	t_env		*curr;
-	int			temp;
 
 	curr = env_copy;
 	while (curr != NULL)
 	{
-		if (ft_strcmp(curr->key, "SHLVL") == 0)
-		{
-			temp = ft_atoi(curr->values[0]) + 1;
-			free(curr->values[0]);
-			curr->values[0] = ft_itoa(temp);
-		}
-		else if (ft_strcmp(curr->key, "PWD") == 0)
-		{
-			free(curr->values[0]);
-			curr->values[0] = getcwd(NULL, 0);
-		}
-		else if (ft_strcmp(curr->key, "OLDPWD") == 0)
-		{
-			free(curr->values[0]);
-			curr->values[0] = NULL;
-		}
+		modify_variables(&curr);
 		curr = curr->next;
 	}
 	not_found_env(env_copy);
@@ -129,7 +113,7 @@ void	initialize(int argc, char **argv, char **envp, t_minishell *data)
 	(void)argv;
 	if (argc > 1)
 	{
-		ft_putstr_fd("Error: too many arguments\n", STDERR_FILENO);
+		ft_putstr_fd("shelld0n[1]: too many arguments\n", STDERR_FILENO);
 		exit(EXIT_FAILURE);
 	}
 	ft_bzero(data, sizeof(t_minishell));

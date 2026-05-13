@@ -142,7 +142,6 @@ int main(int argc, char **argv, char **envp)
 	t_minishell	data;
 
 	initialize(argc, argv, envp, &data);
-	print_env_list(data.processed_env);
 	while (1)
 	{
 		init_prompt(&data);
