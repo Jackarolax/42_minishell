@@ -6,7 +6,7 @@
 /*   By: kmonjard <kmonjard@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/06 17:05:51 by kmonjard          #+#    #+#             */
-/*   Updated: 2026/05/06 23:43:41 by kmonjard         ###   ########.fr       */
+/*   Updated: 2026/05/13 16:11:45 by kmonjard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ void	infile(t_cmd *cmd)
 	int	in_fd;
 
 	in_fd = open(cmd->infile, O_RDONLY);
-	if (in_fd)
+	if (in_fd < 0)
 	{
 		perror(cmd->infile);
 		exit(1);
@@ -56,9 +56,9 @@ void	outfile(t_cmd *cmd)
 	int	out_fd;
 
 	if (cmd->append)
-		flags = O_RDONLY | O_CREAT | O_APPEND;
+		flags = O_WRONLY | O_CREAT | O_APPEND;
 	else
-		flags = O_RDONLY | O_CREAT | O_TRUNC;
+		flags = O_WRONLY | O_CREAT | O_TRUNC;
 	out_fd = open(cmd->outfile, flags, 0644);
 	if (out_fd < 0)
 	{

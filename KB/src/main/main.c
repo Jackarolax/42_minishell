@@ -157,7 +157,7 @@ int main(int argc, char **argv, char **envp)
 		print_tokens(data.tokens); // to remove
 		if (data.tokens && check_syntax(data.tokens))
 		{
-			data.cmds = tokens_to_cmds(data.tokens);
+			data.cmds = tokens_to_cmds(data.tokens, &data);
 			print_cmds(data.cmds);  // to remove
 			execute(data.cmds, &data);
 		}

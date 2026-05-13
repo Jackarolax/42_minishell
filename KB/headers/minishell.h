@@ -6,7 +6,7 @@
 /*   By: kmonjard <kmonjard@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/05 00:03:14 by kmonjard          #+#    #+#             */
-/*   Updated: 2026/05/13 14:20:28 by kmonjard         ###   ########.fr       */
+/*   Updated: 2026/05/13 16:52:18 by kmonjard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,6 +105,8 @@ void	print_str_array(char **array, char *name);
 char	*stitch_env_values(char **values);
 int		check_syntax(t_token *tokens);
 
+char	*expansion(char *str, t_env *env);
+
 void	modify_variables(t_env **curr);
 
 void	write_prompt(void);
@@ -169,7 +171,7 @@ void	update_quote_state(char c, int *quote_state);
 // execute.c
 
 void	execute(t_cmd *cmds, t_minishell *data);
-t_cmd	*tokens_to_cmds(t_token *tokens);
+t_cmd	*tokens_to_cmds(t_token *tokens, t_minishell *data);
 
 /* raw_mode.c */
 

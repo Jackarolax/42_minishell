@@ -6,7 +6,7 @@
 /*   By: kmonjard <kmonjard@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/06 16:28:49 by kmonjard          #+#    #+#             */
-/*   Updated: 2026/05/08 16:13:19 by kmonjard         ###   ########.fr       */
+/*   Updated: 2026/05/13 15:56:38 by kmonjard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,11 @@ void	free_cmds(t_cmd *cmds)
 	{
 		temp = cmds->next;
 		if (cmds->args)
-			free(cmds->args);
+			free_str_arrays(cmds->args);
+		if (cmds->infile)
+			free(cmds->infile);
+		if (cmds->outfile)
+			free(cmds->outfile);
 		free(cmds);
 		cmds = temp;
 	}

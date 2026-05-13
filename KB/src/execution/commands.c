@@ -6,7 +6,7 @@
 /*   By: kmonjard <kmonjard@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/05 00:05:17 by kmonjard          #+#    #+#             */
-/*   Updated: 2026/05/07 21:24:38 by kmonjard         ###   ########.fr       */
+/*   Updated: 2026/05/13 16:51:55 by kmonjard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 /**
  * @brief Fills in commands with redirects.
  */
-static void	fill_redirs(t_token **tok, t_cmd **cmd)
+static void	fill_redirs(t_token **tok, t_cmd **cmd, t_minishell *data)
 {
 	int	append;
 
@@ -28,24 +28,24 @@ static void	fill_redirs(t_token **tok, t_cmd **cmd)
 		(*cmd)->append = append;
 		(*tok) = (*tok)->next;
 		if ((*tok))
-			(*cmd)->outfile = (*tok)->value;
+			(*cmd)->outfile = expansion((*tok)->value, data->processed_env);
 	}
 	else if ((*tok)->type == TOKEN_REDIR_IN)
 	{
 		(*tok) = (*tok)->next;
 		if ((*tok))
-			(*cmd)->infile = (*tok)->value;
+			(*cmd)->infile = expansion((*tok)->value, data->processed_env);
 	}
 }
 
 /**
  * @brief Fills in commands, heredocs and calls redir filler.
  */
-static void	fill_cmd(t_token **tok, t_cmd **curr, int *i)
+static void	fill_cmd(t_token **tok, t_cmd **curr, int *i, t_minishell *data)
 {
 	if ((*tok)->type == TOKEN_WORD)
 	{
-		(*curr)->args[(*i)] = (*tok)->value;
+		(*curr)->args[(*i)] = expansion((*tok)->value, data->processed_env);
 		(*i)++;
 	}
 	else if ((*tok)->type == TOKEN_HEREDOC)
@@ -56,14 +56,14 @@ static void	fill_cmd(t_token **tok, t_cmd **curr, int *i)
 			(*curr)->infile = (*tok)->value;
 	}
 	else
-		fill_redirs(tok, curr);
+		fill_redirs(tok, curr, data);
 }
 
 /**
  * @brief Converts each token to command structure for easier parsing later on.
  * Along with their args.
  */
-t_cmd	*tokens_to_cmds(t_token *tokens)
+t_cmd	*tokens_to_cmds(t_token *tokens, t_minishell *data)
 {
 	int		i;
 	t_cmd	*head;
@@ -85,7 +85,7 @@ t_cmd	*tokens_to_cmds(t_token *tokens)
 		if (curr_tok->type == TOKEN_PIPE)
 			curr_cmd = NULL;
 		else
-			fill_cmd(&curr_tok, &curr_cmd, &i);
+			fill_cmd(&curr_tok, &curr_cmd, &i, data);
 		if (curr_tok)
 			curr_tok = curr_tok->next;
 	}
