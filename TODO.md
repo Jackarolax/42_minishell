@@ -55,9 +55,9 @@
   - [ ] `exit`
 - [X] Pipes and Redirection
   - [X] `|` output of one command to the next command
-  - [ ] `>` redirect output
-  - [ ] `<` redirect input
-  - [ ] `<<` should be given a delimiter, it will read the input until the delimiter is seen. It doesn't have to update history.
+  - [X] `>` redirect output
+  - [X] `<` redirect input
+  - [X] `<<` should be given a delimiter, it will read the input until the delimiter is seen. It doesn't have to update history.
   - Note: do check manual and heredoc
 - [X] External commands
   - [ ] Handle `$ENV` outputting proper commands

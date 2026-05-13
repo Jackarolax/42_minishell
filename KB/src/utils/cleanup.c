@@ -6,7 +6,7 @@
 /*   By: kmonjard <kmonjard@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/06 16:28:06 by kmonjard          #+#    #+#             */
-/*   Updated: 2026/05/08 16:13:56 by kmonjard         ###   ########.fr       */
+/*   Updated: 2026/05/13 13:24:29 by kmonjard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,9 @@ void	cleanup_loop(t_minishell *data)
 	}
 }
 
+/**
+ * @brief A wrapper to cleanup the shell once the program ends.
+ */
 void	cleanup_shell(t_minishell *data)
 {
 	cleanup_loop(data);

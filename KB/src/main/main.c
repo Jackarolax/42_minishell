@@ -135,7 +135,7 @@ void print_env_list(t_env *env)
 }
 
 /**
- *
+ * @brief Main is main.
  */
 int main(int argc, char **argv, char **envp)
 {
@@ -154,10 +154,13 @@ int main(int argc, char **argv, char **envp)
 			continue ;
 		}
 		data.tokens = lexer(data.input);
-		print_tokens(data.tokens);
-		data.cmds = tokens_to_cmds(data.tokens);
-		print_cmds(data.cmds);
-		execute(data.cmds, &data);
+		print_tokens(data.tokens); // to remove
+		if (data.tokens && check_syntax(data.tokens))
+		{
+			data.cmds = tokens_to_cmds(data.tokens);
+			print_cmds(data.cmds);  // to remove
+			execute(data.cmds, &data);
+		}
 		cleanup_loop(&data);
 	}
 	cleanup_shell(&data);

@@ -6,7 +6,7 @@
 /*   By: kmonjard <kmonjard@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/05 00:02:32 by kmonjard          #+#    #+#             */
-/*   Updated: 2026/05/09 15:25:28 by kmonjard         ###   ########.fr       */
+/*   Updated: 2026/05/13 13:25:10 by kmonjard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ void	init_prompt(t_minishell *data)
 }
 
 /**
- * @brief Might add more features to the prompt string if I can.
+ * @brief Might add more features to the prompt string if we can.
  */
 void	write_prompt(void)
 {

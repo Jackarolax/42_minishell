@@ -6,7 +6,7 @@
 /*   By: kmonjard <kmonjard@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/05 00:03:14 by kmonjard          #+#    #+#             */
-/*   Updated: 2026/05/13 13:18:07 by kmonjard         ###   ########.fr       */
+/*   Updated: 2026/05/13 14:20:28 by kmonjard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,6 +101,9 @@ typedef struct s_minishell
 
 // test
 void	print_str_array(char **array, char *name);
+
+char	*stitch_env_values(char **values);
+int		check_syntax(t_token *tokens);
 
 void	modify_variables(t_env **curr);
 
