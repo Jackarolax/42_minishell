@@ -6,7 +6,7 @@
 /*   By: kmonjard <kmonjard@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/13 13:30:32 by kmonjard          #+#    #+#             */
-/*   Updated: 2026/05/13 13:31:32 by kmonjard         ###   ########.fr       */
+/*   Updated: 2026/05/13 14:25:33 by kmonjard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,13 +42,14 @@ int	check_syntax(t_token *tokens)
 	{
 		if (curr->type == TOKEN_PIPE)
 		{
-			if (curr == tokens || (curr->next && curr->next->type == TOKEN_PIPE))
+			if (curr == tokens
+				|| (curr->next && curr->next->type == TOKEN_PIPE))
 				return (syntax_error("|"));
 			if (!curr->next)
 				return (syntax_error("|"));
 		}
-		else if (curr->type == TOKEN_REDIR_IN || curr->type == TOKEN_REDIR_OUT ||
-				 curr->type == TOKEN_APPEND || curr->type == TOKEN_HEREDOC)
+		else if (curr->type == TOKEN_REDIR_IN || curr->type == TOKEN_REDIR_OUT
+			|| curr->type == TOKEN_APPEND || curr->type == TOKEN_HEREDOC)
 		{
 			if (!curr->next)
 				return (syntax_error(NULL));
