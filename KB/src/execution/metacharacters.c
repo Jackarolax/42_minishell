@@ -6,7 +6,7 @@
 /*   By: kmonjard <kmonjard@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/06 17:05:51 by kmonjard          #+#    #+#             */
-/*   Updated: 2026/05/13 16:11:45 by kmonjard         ###   ########.fr       */
+/*   Updated: 2026/05/13 17:59:19 by kmonjard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ void	handle_pipes(t_cmd *cmd, int *prev_fd, int fd[2])
 /**
  * @brief Handles when an infile `<` is present
  */
-void	infile(t_cmd *cmd)
+void	infile(t_cmd *cmd, t_minishell *data)
 {
 	int	in_fd;
 
@@ -41,6 +41,7 @@ void	infile(t_cmd *cmd)
 	if (in_fd < 0)
 	{
 		perror(cmd->infile);
+		cleanup_shell(data);
 		exit(1);
 	}
 	dup2(in_fd, STDIN_FILENO);
@@ -50,7 +51,7 @@ void	infile(t_cmd *cmd)
 /**
  * @brief Handles when an outfile `>` is present.
  */
-void	outfile(t_cmd *cmd)
+void	outfile(t_cmd *cmd, t_minishell *data)
 {
 	int	flags;
 	int	out_fd;
@@ -63,6 +64,7 @@ void	outfile(t_cmd *cmd)
 	if (out_fd < 0)
 	{
 		perror(cmd->outfile);
+		cleanup_shell(data);
 		exit(1);
 	}
 	dup2(out_fd, STDOUT_FILENO);
