@@ -6,7 +6,7 @@
 /*   By: kmonjard <kmonjard@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/05 00:03:14 by kmonjard          #+#    #+#             */
-/*   Updated: 2026/05/13 16:52:18 by kmonjard         ###   ########.fr       */
+/*   Updated: 2026/05/13 17:55:03 by kmonjard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,6 +87,10 @@ typedef struct s_history
  * @param input the string inputted from the prompt
  * @param history where history is stored
  * @param tokens where the input is stored after preprocessing
+ * @param cmds command structure stored for each command passed
+ * @param processed_env an env structure that is dynamic
+ * @param pid pid of the current program, set in execution.c
+ * @param orig_settings termios strucute of the outer terminal
  */
 typedef struct s_minishell
 {
@@ -95,7 +99,7 @@ typedef struct s_minishell
 	t_token			*tokens;
 	t_cmd			*cmds;
 	t_env			*processed_env;
-	char			**envp;
+	pid_t			pid;
 	struct termios	orig_settings;
 }	t_minishell;
 

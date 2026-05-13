@@ -6,7 +6,7 @@
 /*   By: kmonjard <kmonjard@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/05 00:05:20 by kmonjard          #+#    #+#             */
-/*   Updated: 2026/05/09 14:41:06 by kmonjard         ###   ########.fr       */
+/*   Updated: 2026/05/13 17:52:33 by kmonjard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,17 +25,20 @@
  * Else if the child exited using signals, check what signal made it exit
  * Then do 128 + [SIGNUM] to g_signal.
  */
-void	wait_all_children(void)
+void	wait_all_children(pid_t last_pid)
 {
 	int	status;
 
-	while (waitpid(-1, &status, 0) > 0)
+	if (last_pid != -1)
 	{
+		waitpid(last_pid, &status, 0);
 		if (WIFEXITED(status))
 			g_signal = WEXITSTATUS(status);
 		else if (WIFSIGNALED(status))
 			g_signal = 128 + WTERMSIG(status);
 	}
+	while (waitpid(-1, &status, 0) > 0)
+		;
 }
 
 /**
@@ -116,20 +119,24 @@ void	execute(t_cmd *cmds, t_minishell *data)
 	t_cmd	*curr;
 	int		fd[2];
 	int		prev_fd;
-	pid_t	pid;
+	pid_t	last_pid;
 
 	curr = cmds;
 	prev_fd = -1;
+	last_pid = -1;
 	while (curr)
 	{
 		if (curr->next)
 			pipe(fd);
-		pid = fork();
-		if (pid == 0)
+		data->pid = fork();
+		if (data->pid == 0)
 			run_child(curr, data, prev_fd, fd);
 		else
+		{
+			last_pid = data->pid;
 			run_parent(curr, &prev_fd, fd);
+		}
 		curr = curr->next;
 	}
-	wait_all_children();
+	wait_all_children(last_pid);
 }

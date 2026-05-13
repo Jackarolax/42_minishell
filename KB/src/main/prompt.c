@@ -6,7 +6,7 @@
 /*   By: kmonjard <kmonjard@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/05 00:02:32 by kmonjard          #+#    #+#             */
-/*   Updated: 2026/05/13 13:25:10 by kmonjard         ###   ########.fr       */
+/*   Updated: 2026/05/13 17:04:25 by kmonjard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,18 @@ void	init_prompt(t_minishell *data)
  */
 void	write_prompt(void)
 {
-	write(1, "shelld0n $> ", 12);
+	char	*sig;
+
+	if (g_signal != 0)
+	{
+		write(1, "shelld0n[", 10);
+		sig = ft_itoa(g_signal);
+		write(1, sig, ft_strlen(sig));
+		free(sig);
+		write(1, "] $> ", 6);
+	}
+	else
+		write(1, "shelld0n $> ", 13);
 }
 
 /**
