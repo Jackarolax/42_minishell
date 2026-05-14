@@ -2,10 +2,10 @@
 	"version": "0.2.0",
 	"configurations": [
 		{
-			"name": "Debug minishell (KB)",
+			"name": "Debug minishell (Alex)",
 			"type": "cppdbg",
 			"request": "launch",
-			"program": "${workspaceFolder}/KB/minishell",
+			"program": "${workspaceFolder}/Alex/minishell",
 			"stopAtEntry": false,
 			"cwd": "${workspaceFolder}",
 			"environment": [],

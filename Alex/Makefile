@@ -12,16 +12,26 @@
 
 NAME = minishell
 CC = gcc
-C_FLAGS = -Wall -Werror -Wextra -g
+C_FLAGS = -g
 
 SRC_DIR = ./src
 LIBFT = $(SRC_DIR)/libft/libft.a
 
-C_FILES = main.c
+C_FILES = main/main.c main/prompt.c main/initializer.c env/environment.c \
+	input/signals.c main/raw_mode.c input/history.c \
+	input/arrows.c input/input.c input/input_utils.c \
+	lexer/lexer.c execution/execute.c execution/commands.c \
+	execution/path_resolver.c utils/cleanup.c execution/metacharacters.c \
+	utils/free_shell.c lexer/token.c execution/commands_utils.c \
+	input/write_and_del.c main/initializer_utils.c execution/check_syntax.c \
+	execution/expand.c builtins/inbuilts.c
 
 SRC = $(addprefix $(SRC_DIR)/, $(C_FILES))
 
-OBJ = $(SRC:.c=.o)
+C_OBJS = $(C_FILES:.c=.o)
+
+OBJ_DIR = bin
+OBJ = $(addprefix $(OBJ_DIR)/, $(C_OBJS))
 
 INCLUDES = ./headers
 
@@ -34,7 +44,8 @@ $(LIBFT):
 $(NAME): $(OBJ)
 	@$(CC) $(C_FLAGS) $(OBJ) $(LIBFT) -o $(NAME)
 
-%.o: %.c
+$(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
+	@mkdir -p $(dir $@)
 	@echo "Compiling $<..."
 	@$(CC) $(C_FLAGS) -c $< -o $@ -I$(INCLUDES)
 
