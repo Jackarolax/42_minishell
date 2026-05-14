@@ -76,7 +76,10 @@ static int	fill_array(char **out, const char *s, char c)
 	return (1);
 }
 
-//Splits str s into a mallocated array of strings based on delimiter c
+/**
+ * @brief Splits str s into a mallocated array of strings based on delimiter c
+ * @return Splitted string. NULL if malloc errors or invalid string.
+ */
 char	**ft_split(char const *s, char c)
 {
 	char	**out;

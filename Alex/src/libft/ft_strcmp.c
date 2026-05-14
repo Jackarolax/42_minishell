@@ -1,19 +1,24 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   free_str_arrays.c                                  :+:      :+:    :+:   */
+/*   ft_strcmp.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: anematol <anematol@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: kmonjard <kmonjard@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/09/26 19:01:19 by anematol          #+#    #+#             */
-/*   Updated: 2025/09/26 19:01:44 by anematol         ###   ########.fr       */
+/*   Created: 2026/01/16 12:59:45 by kmonjard          #+#    #+#             */
+/*   Updated: 2026/05/08 16:41:25 by kmonjard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "pipex.h"
+#include "libft.h"
 
-void	free_str_arrays(char **str_array1, char **str_array2)
+//Compare 2 strings until n: return 0 if equal, else return s1 - s2
+int	ft_strcmp(const char *s1, const char *s2)
 {
-	free_str_array(str_array1);
-	free_str_array(str_array2);
+	while (*s1 && (*s1 == *s2))
+	{
+		s1++;
+		s2++;
+	}
+	return ((unsigned char)*s1 - (unsigned char)*s2);
 }
