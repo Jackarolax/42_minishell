@@ -6,7 +6,7 @@
 /*   By: kmonjard <kmonjard@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/05 00:05:33 by kmonjard          #+#    #+#             */
-/*   Updated: 2026/05/09 13:54:14 by kmonjard         ###   ########.fr       */
+/*   Updated: 2026/05/14 16:35:39 by kmonjard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -120,11 +120,8 @@ void	add_env_var(t_env *copy, char *key, char *value)
 	new_node->key = ft_strdup(key);
 	new_node->values = malloc(sizeof(char *) * 2);
 	if (!new_node->values)
-	{
 		ft_putstr_fd("shelld0n: malloc", STDERR_FILENO);
-	}
-	new_node->values[0] = ft_strdup(value);
-	new_node->values[1] = NULL;
+	new_node->values = ft_split(value, ':');
 	new_node->next = NULL;
 	if (copy == NULL)
 	{
