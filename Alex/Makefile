@@ -24,7 +24,8 @@ C_FILES = main/main.c main/prompt.c main/initializer.c env/environment.c \
 	execution/path_resolver.c utils/cleanup.c execution/metacharacters.c \
 	utils/free_shell.c lexer/token.c execution/commands_utils.c \
 	input/write_and_del.c main/initializer_utils.c execution/check_syntax.c \
-	execution/expand.c builtins/inbuilts.c
+	execution/expand.c builtins/ft_echo.c builtins/ft_pwd.c builtins/ft_cd.c \
+	builtins/ft_export.c builtins/ft_unset.c builtins/ft_env.c builtins/ft_exit.c
 
 SRC = $(addprefix $(SRC_DIR)/, $(C_FILES))
 
