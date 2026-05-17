@@ -13,6 +13,7 @@
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
+# include <limits.h>
 # include <stdio.h>
 # include <stdlib.h>
 # include <signal.h>
@@ -189,9 +190,12 @@ void	add_env_var(t_env *copy, char *key, char *value);
 /* inbuilts.c */
 
 void	ft_echo(int argc, char **argv);
-void	ft_cd(int argc, char **argv);
+void	ft_cd(t_env *env, int argc, char **argv);
 void	ft_pwd(void);
-void ft_export(t_env *env, int argc, char **argv);
+void	ft_export(t_env *env, int argc, char **argv);
+void	ft_unset(t_env **env, int argc, char **argv);
+void	ft_env(t_env *env, int argc, char **argv);
+void	ft_exit(t_minishell *data);
 
 /* execute.c */
 
