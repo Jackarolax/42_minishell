@@ -6,7 +6,7 @@
 /*   By: anematol <anematol@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/17 14:41:37 by anematol          #+#    #+#             */
-/*   Updated: 2026/05/17 14:42:01 by anematol         ###   ########.fr       */
+/*   Updated: 2026/05/17 17:23:37 by anematol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ void	ft_env(t_env *env, int argc, char **argv)
 
 	if (argc > 1)
 		return ;
-	while(env)
+	while (env)
 	{
 		if (*(env->values))
 		{

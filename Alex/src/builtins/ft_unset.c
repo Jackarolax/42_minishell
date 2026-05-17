@@ -6,10 +6,9 @@
 /*   By: anematol <anematol@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/17 14:40:10 by anematol          #+#    #+#             */
-/*   Updated: 2026/05/17 14:40:52 by anematol         ###   ########.fr       */
+/*   Updated: 2026/05/17 17:26:13 by anematol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
 
 #include "libft.h"
 #include "minishell.h"
@@ -42,7 +41,7 @@ t_env	*delete_node(t_env *env_start, t_env *node_to_delete)
 	return (env_start);
 }
 
-void ft_unset(t_env **env_p, int argc, char **argv)
+void	ft_unset(t_env **env_p, int argc, char **argv)
 {
 	int		i;
 

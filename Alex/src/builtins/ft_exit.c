@@ -6,13 +6,12 @@
 /*   By: anematol <anematol@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/17 14:42:13 by anematol          #+#    #+#             */
-/*   Updated: 2026/05/17 15:00:13 by anematol         ###   ########.fr       */
+/*   Updated: 2026/05/17 17:24:45 by anematol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 #include "minishell.h"
-
 
 void	ft_exit(t_minishell *data_p)
 {
