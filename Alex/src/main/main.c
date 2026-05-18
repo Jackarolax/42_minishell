@@ -140,16 +140,8 @@ void print_env_list(t_env *env)
 int main(int argc, char **argv, char **envp)
 {
 	t_minishell	data;
-	char *args[2] = {"cd", ".."};
-	char *argz[2] = {"unset", "a"};
-	char *argts[2] = {"cd", "Alex"};
 
 	initialize(argc, argv, envp, &data);
-	ft_cd(data.processed_env, 2, args);
-	ft_pwd();
-	ft_cd(data.processed_env, 2, argts);
-	ft_pwd();
-	ft_env(data.processed_env, 1, NULL);
 	while (1)
 	{
 		init_prompt(&data);

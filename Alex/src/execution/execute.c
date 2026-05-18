@@ -70,6 +70,25 @@ static char	*validate_path(char *cmd_name, t_minishell *data)
 	return (path);
 }
 
+int	run_child_inbuilt(t_cmd *cmd,t_minishell *data)
+{
+		int argc;
+
+	argc = 0;
+	while (cmd->args[argc])
+		argc++;
+	ft_printf("trying to run command %s", cmd->args[0]);
+	if (ft_strcmp(cmd->args[0], "echo") == 0)
+		return (ft_echo(argc, cmd->args), 1);
+	if (ft_strcmp(cmd->args[0], "pwd") == 0)
+		return (ft_pwd(), 1);
+	if (ft_strcmp(cmd->args[0], "env") == 0)
+		return (ft_env(data->processed_env, argc, cmd->args), 1);
+	if (ft_strcmp(cmd->args[0], "export" ) == 0)
+		return (ft_export(data->processed_env, argc, cmd->args), 1);
+	return (0);
+}
+
 /**
  * @brief Child process.
  *
@@ -100,6 +119,11 @@ void	run_child(t_cmd *cmd, t_minishell *data, int prev_fd, int fd[2])
 		outfile(cmd, data);
 	if (!cmd->args[0])
 		exit(0);
+	if (run_child_inbuilt(cmd, data))
+	{
+		cleanup_shell(data);
+		exit(0);
+	}
 	cmd_path = validate_path(cmd->args[0], data);
 	fresh_env = convert_env_to_array(data->processed_env);
 	execve(cmd_path, cmd->args, fresh_env);
@@ -120,6 +144,33 @@ void	run_parent(t_cmd *curr, int *prev_fd, int fd[2])
 		(*prev_fd) = fd[0];
 	}
 }
+//if a "parent" inbuilt command gets detected, the function
+// will run it and return 1
+// a "parent" inbuilt command does not output to stdout
+//(will also set cmd = cmd->next if an inbuilt command will be executed) ->disabled that for now
+int	run_parent_inbuilt(t_cmd	*cmd, t_minishell *data)
+{
+	int argc;
+
+	argc = 0;
+	while (cmd->args[argc])
+		argc++;
+	if (ft_strcmp(cmd->args[0], "cd") == 0)
+		return (ft_cd(data->processed_env, argc, cmd->args), 1);
+//		*cmd_p = (*cmd_p)->next, 1);
+	if (ft_strcmp(cmd->args[0], "unset") == 0)
+		return (ft_unset(&(data->processed_env), argc, cmd->args), 1);
+//		*cmd_p = (*cmd_p)->next, 1);
+	if (ft_strcmp(cmd->args[0], "export" ) == 0 && argc > 1)
+		return (ft_export(data->processed_env, argc, cmd->args), 1);
+//		*cmd_p = (*cmd_p)->next, 1);
+	if (ft_strcmp(cmd->args[0], "exit") == 0)
+		return (ft_exit(data), 1);
+//		*cmd_p = (*cmd_p)->next, 1);
+	return (0);
+}
+
+
 
 /**
  * @brief Abstract. Execution code.
@@ -151,6 +202,11 @@ void	execute(t_cmd *cmds, t_minishell *data)
 	last_pid = -1;
 	while (curr)
 	{
+		if (run_parent_inbuilt(curr, data))
+		{
+			curr = curr->next;
+			continue ;
+		}
 		if (curr->next)
 			pipe(fd);
 		data->pid = fork();
@@ -165,3 +221,4 @@ void	execute(t_cmd *cmds, t_minishell *data)
 	}
 	wait_all_children(last_pid);
 }
+
