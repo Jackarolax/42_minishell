@@ -118,7 +118,6 @@ void	add_env_var(t_env *copy, char *key, char *value)
 	if (!new_node)
 		ft_putstr_fd("Error: ", STDERR_FILENO);
 	new_node->key = ft_strdup(key);
-	new_node->values = malloc(sizeof(char *) * 2);
 	if (!new_node->values)
 		ft_putstr_fd("shelld0n: malloc", STDERR_FILENO);
 	new_node->values = ft_split(value, ':');

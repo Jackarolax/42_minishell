@@ -44,7 +44,7 @@
   - [x] `cd` only with a relative or absolute path
     - Remarks: Function expects only tokens after cd including cd as argv[0]. Expects argc to be 1.
     ```C
-    void ft_cd(int argc, char **argv);
+    void ft_cd(t_env *env,int argc, char **argv);
     ```
 
   - [x] `pwd`
@@ -52,11 +52,22 @@
     void ft_pwd(void);
     ```
     - There is an environment variable called `OLDPWD` hmm...
-
-  - [ ] `export`
-  - [ ] `unset`
-  - [ ] `env`
-  - [ ] `exit`
+  - [x] `export`
+    ```C
+    void	ft_export(t_env *env, int argc, char **argv);
+    ```
+  - [x] `unset`
+    ```C
+    void	ft_unset(t_env **env_p, int argc, char **argv);
+    ```
+  - [x] `env`
+    ```C
+    void	ft_env(t_env *env, int argc, char **argv);
+    ```
+  - [x] `exit`
+    ```C
+    void	ft_exit(t_minishell *data_p);
+    ```
 - [X] Pipes and Redirection
   - [X] `|` output of one command to the next command
   - [X] `>` redirect output
