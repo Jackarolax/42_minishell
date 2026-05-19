@@ -13,9 +13,17 @@
 #include "libft.h"
 #include "minishell.h"
 
-void	ft_exit(t_minishell *data_p)
+void	ft_exit(t_minishell *data_p, int argc, char **argv)
 {
+	int	exit_code;
+
+	if (argc > 2)
+		return ((void) ft_printf("exit: too many arguments\n"));
+	if (argc == 1)
+		exit_code = 0;
+	else
+		exit_code = atoi(argv[1]);
 	cleanup_loop(data_p);
 	cleanup_shell(data_p);
-	exit(g_signal);
+	exit(exit_code);
 }

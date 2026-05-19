@@ -247,7 +247,7 @@ void	ft_pwd(void);
 void	ft_export(t_env *env, int argc, char **argv);
 void	ft_unset(t_env **env, int argc, char **argv);
 void	ft_env(t_env *env, int argc, char **argv);
-void	ft_exit(t_minishell *data);
+void	ft_exit(t_minishell *data_p, int argc, char **argv);
 
 /* execute.c */
 

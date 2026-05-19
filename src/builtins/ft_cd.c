@@ -14,18 +14,33 @@
 #include "minishell.h"
 
 /**
- *
+ *changes PWD env variable
+
  */
-static void	cd_arg_error(int argc)
+static void	change_pwd(t_env *env)
 {
-	if (argc < 2)
-		ft_printf("cd: missing operand\n");
-	if (argc > 2)
-		ft_printf("cd: too many arguments\n");
+	t_env		*old_pwd_node;
+	const char	*export_argv[2];
+	char		path[PATH_MAX];
+
+	if (getcwd(path, PATH_MAX) == NULL)
+		perror("pwd");
+	export_argv[0] = "export";
+	export_argv[1] = "PWD";
+	old_pwd_node = get_env_node(env, "PWD");
+	if (!old_pwd_node)
+	{
+		ft_export(env, 2, (char **) export_argv);
+		old_pwd_node = get_env_node(env, "PWD");
+	}
+	if (old_pwd_node && old_pwd_node->values)
+		free_str_arrays(old_pwd_node->values);
+	if (old_pwd_node)
+		old_pwd_node->values = ft_split(path, ':');
 }
 
 /**
- *
+ *changes OLDPWD env variable
  */
 static void	change_oldpwd(t_env *env, char *old_path)
 {
@@ -80,6 +95,7 @@ void	ft_cd(t_env *env, int argc, char **argv)
 		if (chdir(argv[1]) != 0)
 			perror("cd");
 		change_oldpwd(env, old_path);
+		change_pwd(env);
 		return ;
 	}
 	if (ft_strlen(path) + ft_strlen(argv[1]) + 1 > PATH_MAX)
@@ -89,4 +105,5 @@ void	ft_cd(t_env *env, int argc, char **argv)
 	if (chdir(path) != 0)
 		perror("cd");
 	change_oldpwd(env, old_path);
+	change_pwd(env);
 }

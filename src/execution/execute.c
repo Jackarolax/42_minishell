@@ -96,7 +96,7 @@ int	run_parent_inbuilt(t_cmd	**cmd_p, t_minishell *data)
 		return (ft_export(data->processed_env, argc, (*cmd_p)->args),
 			*cmd_p = (*cmd_p)->next, 1);
 	if (ft_strcmp((*cmd_p)->args[0], "exit") == 0)
-		return (ft_exit(data),
+		return (ft_exit(data, argc, (*cmd_p)->args),
 			*cmd_p = (*cmd_p)->next, 1);
 	return (0);
 }
