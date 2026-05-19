@@ -19,8 +19,8 @@ LIBFT = $(SRC_DIR)/libft/libft.a
 
 C_FILES = main/main.c main/prompt.c main/initializer.c env/environment.c \
 	input/signals.c main/raw_mode.c input/history.c \
-	input/arrows.c input/input.c input/input_utils.c \
-	lexer/lexer.c execution/execute.c execution/commands.c \
+	input/arrows.c input/input.c input/input_utils.c lexer/lexer.c\
+	execution/execute.c execution/run_child.c execution/commands.c \
 	execution/path_resolver.c utils/cleanup.c execution/metacharacters.c \
 	utils/free_shell.c lexer/token.c execution/commands_utils.c \
 	input/write_and_del.c main/initializer_utils.c execution/check_syntax.c \
