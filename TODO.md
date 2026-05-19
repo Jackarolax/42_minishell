@@ -13,10 +13,11 @@
 - [X] make the cleanup function
 - [ ] check for input errors in redirections, check for every error tbh.
 - [X] free the buffer when CTRL C is pressed
-- [ ] Error when path points to a folder rather than executable binary
+- [X] Error when path points to a folder rather than executable binary
 - [X] `ls > out1.txt > out2.txt` is not creating both files, only out2.txt
 - [X] There is a leak for `cat < nonexistent.txt` exits safely tho
 - [X] Something is happening in `cat /dev/urandom | head -n 5`
+- [ ] Heredoc
 
 ### Parsing
 - [X] Read input
@@ -26,7 +27,7 @@
   - [X] Split line into tokens
   - [X] Handle quotes `'`,`"`
   - [X] Handle escape characters
-  - [X] Handle metacharacters
+  - [X] Handle(input[i] == '>' && input[i + 1] == '>') metacharacters
     - Remarks: Characters like redirects and the heredoc is parsed as a token on a list
 - [X] Parsing
   - [X] Build command structures from tokens

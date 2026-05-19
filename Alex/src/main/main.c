@@ -14,17 +14,17 @@
 
 char *get_token_name(t_token_type type)
 {
-	if (type == TOKEN_WORD)
+	if (type == WORD)
 		return ("WORD");
-	if (type == TOKEN_PIPE)
+	if (type == PIPE)
 		return ("PIPE");
-	if (type == TOKEN_REDIR_IN)
+	if (type == REDIR_IN)
 		return ("REDIR_IN (<)");
-	if (type == TOKEN_REDIR_OUT)
+	if (type == REDIR_OUT)
 		return ("REDIR_OUT (>)");
-	if (type == TOKEN_HEREDOC)
+	if (type == HEREDOC)
 		return ("HEREDOC (<<)");
-	if (type == TOKEN_APPEND)
+	if (type == APPEND)
 		return ("APPEND (>>)");
 	return ("UNKNOWN");
 }
@@ -65,11 +65,16 @@ void print_cmds(t_cmd *cmds)
 			printf("  Arg[%d]: %s\n", i, curr->args[i]);
 			i++;
 		}
-		if (curr->infile)
-			printf("  Infile:  %s (Heredoc: %d)\n", curr->infile, curr->heredoc);
-		if (curr->outfile)
-			printf("  Outfile: %s (Append: %d)\n", curr->outfile, curr->append);
-
+		if (curr->redirs)
+		{
+			t_redir *r = curr->redirs;
+			while (r != NULL)
+			{
+				if (curr->redirs->file && curr->redirs->type)
+					printf("File: %s, Action: %s\n", curr->redirs->file, get_token_name(curr->redirs->type));
+				r = r->next;
+			}
+		}
 		curr = curr->next;
 		if (curr) printf("      |\n      V\n");
 	}
@@ -148,7 +153,7 @@ int main(int argc, char **argv, char **envp)
 		data.input = listen_input(STDIN_FILENO, &data);
 		if (!data.input)
 			break ;
-		if (!check_input(data.input))
+		if (check_input(data.input))
 		{
 			free(data.input);
 			continue ;
