@@ -14,7 +14,7 @@
 
 /**
  * @brief Cleanup wrapper for next prompt.
- * Clean cmds,
+ * Cleans cmds, cleans tokens, sets heredoc count to 0
  */
 void	cleanup_loop(t_minishell *data)
 {
@@ -33,6 +33,7 @@ void	cleanup_loop(t_minishell *data)
 		free_tokens(data->tokens);
 		data->tokens = NULL;
 	}
+	data->heredoc_count = 0;
 }
 
 /**

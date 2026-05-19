@@ -126,6 +126,7 @@ typedef struct s_history
  * @param cmds command structure stored for each command passed
  * @param processed_env an env structure that is dynamic
  * @param pid pid of the current program, set in execution.c
+ * @param heredoc_count the number of heredoc files in the current process
  * @param orig_settings termios strucute of the outer terminal
  */
 typedef struct s_minishell
@@ -136,6 +137,7 @@ typedef struct s_minishell
 	t_cmd			*cmds;
 	t_env			*processed_env;
 	pid_t			pid;
+	int				heredoc_count;
 	struct termios	orig_settings;
 }	t_minishell;
 
@@ -148,7 +150,8 @@ char	*expand_heredoc_body(char *str, t_env *env);
 void	prep_all_heredocs(t_cmd *cmds, t_minishell *data);
 void	unlink_heredocs(t_cmd *cmds);
 int		has_quotes(char *str);
-
+void	handle_heredoc_backspace(char *buffer, int *i);
+int		manage_heredoc_chars(char *ch, char buffer[4096], int *i);
 void	append_char(char **res, char c);
 
 void	handle_expansion(char *str, int *i, char **res, t_env *env);
