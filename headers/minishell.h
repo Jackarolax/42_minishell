@@ -146,7 +146,6 @@ void	free_redirs(t_redir *head);
 char	*strip_quotes_only(char *str);
 char	*expand_heredoc_body(char *str, t_env *env);
 void	prep_all_heredocs(t_cmd *cmds, t_minishell *data);
-void	apply_redirections_child(t_cmd *cmd, t_minishell *data);
 void	unlink_heredocs(t_cmd *cmds);
 int		has_quotes(char *str);
 
@@ -221,6 +220,10 @@ void	init_prompt(t_minishell *data);
 
 t_token	*lexer(char *input);
 void	update_quote_state(char c, int *quote_state);
+
+//run_child.c
+
+void	run_child(t_cmd *cmd, t_minishell *data, int prev_fd, int fd[2]);
 
 // execute.c
 

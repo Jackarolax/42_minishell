@@ -21,7 +21,7 @@ static void	fill_redirs(t_token **tok, t_cmd **cmd, t_minishell *data)
 	char			*file;
 
 	if ((*tok)->type == REDIR_OUT || (*tok)->type == APPEND
-			|| (*tok)->type == REDIR_IN)
+		|| (*tok)->type == REDIR_IN)
 	{
 		type = (*tok)->type;
 		(*tok) = (*tok)->next;

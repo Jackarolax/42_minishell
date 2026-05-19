@@ -29,7 +29,7 @@ static void	cd_arg_error(int argc)
  */
 static void	change_oldpwd(t_env *env, char *old_path)
 {
-	t_env	*old_pwd_node;
+	t_env		*old_pwd_node;
 	const char	*export_argv[2];
 
 	export_argv[0] = "export";
