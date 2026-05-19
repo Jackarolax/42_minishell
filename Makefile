@@ -63,6 +63,8 @@ fclean:
 	@echo "Deleting all binaries in minishell..."
 	@rm -f $(NAME)
 	@rm -f $(OBJ) $(O_BONUS)
+	@rmdir bin/*
+	@rmdir bin
 
 re: fclean all
 
