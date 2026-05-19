@@ -2,14 +2,14 @@
 	"version": "0.2.0",
 	"configurations": [
 		{
-			"name": "Debug minishell (KB)",
+			"name": "Debug minishell",
 			"type": "cppdbg",
 			"request": "launch",
-			"program": "${workspaceFolder}/KB/minishell",
+			"program": "${workspaceFolder}/minishell",
 			"stopAtEntry": false,
 			"cwd": "${workspaceFolder}",
 			"environment": [],
-			"externalConsole": false,
+			"externalConsole": true,
 			// "console": "integratedTerminal",
 			"MIMode": "gdb",
 			"miDebuggerPath": "/usr/bin/gdb",

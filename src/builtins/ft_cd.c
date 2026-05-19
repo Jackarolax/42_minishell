@@ -40,17 +40,10 @@ static void	change_oldpwd(t_env *env, char *old_path)
 		ft_export(env, 2, (char **) export_argv);
 		old_pwd_node = get_env_node(env, "OLDPWD");
 	}
-	if (!(old_pwd_node->values))
-	{
-		(old_pwd_node->values) = malloc(sizeof(char *));
-		if (!old_pwd_node->values)
-			return ;
-	}
-	if ((old_pwd_node->values)[0])
-		free((old_pwd_node->values)[0]);
-	(old_pwd_node->values)[0] = ft_strdup(old_path);
-	if (!(old_pwd_node->values)[0])
-		return ;
+	if (old_pwd_node && old_pwd_node->values)
+		free_str_arrays(old_pwd_node->values);
+	if (old_pwd_node)
+		old_pwd_node->values = ft_split(old_path, ':');
 }
 
 /**
@@ -80,7 +73,7 @@ void	ft_cd(t_env *env, int argc, char **argv)
 		return (perror("cd"));
 	if (argc == 1)
 		return (ft_cd_home(env, old_path));
-	if (argc > 2)
+	else if (argc > 2)
 		ft_printf("cd: too many arguments\n");
 	if (argv[1][0] == '/')
 	{
