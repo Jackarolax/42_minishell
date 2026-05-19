@@ -72,3 +72,38 @@ char	*expand_heredoc_body(char *str, t_env *env)
 	}
 	return (res);
 }
+
+/**
+ * @brief Deletes the last character from both the string buffer
+ * and visually wipes it out from the terminal window.
+ */
+void	handle_heredoc_backspace(char *buffer, int *i)
+{
+	if (*i > 0)
+	{
+		(*i)--;
+		buffer[*i] = '\0';
+		write(1, "\b \b", 3);
+	}
+}
+
+/**
+ * @brief A utility function for managing heredoc characters.
+ */
+int	manage_heredoc_chars(char *ch, char *buffer, int *i)
+{
+	if ((*ch) == 127 || (*ch) == 8)
+		handle_heredoc_backspace(buffer, i);
+	else if ((*ch) == '\n')
+	{
+		buffer[(*i)++] = '\n';
+		write(1, "\n", 1);
+		return (1);
+	}
+	else if ((*ch) >= 32 && (*ch) <= 126 && (*i) < 4094)
+	{
+		write(1, &(*ch), 1);
+		buffer[(*i)++] = (*ch);
+	}
+	return (0);
+}

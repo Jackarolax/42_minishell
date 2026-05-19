@@ -17,7 +17,7 @@ C_FLAGS = -g
 SRC_DIR = ./src
 LIBFT = $(SRC_DIR)/libft/libft.a
 
-C_FILES = main/main.c main/prompt.c main/initializer.c env/environment.c \
+C_FILES = tmp/main.c main/prompt.c main/initializer.c env/environment.c \
 	input/signals.c main/raw_mode.c input/history.c \
 	input/arrows.c input/input.c input/input_utils.c lexer/lexer.c\
 	execution/execute.c execution/run_child.c execution/commands.c \

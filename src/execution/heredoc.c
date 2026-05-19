@@ -15,18 +15,15 @@
 /**
  * @brief
  */
-static char	*get_tmp_filename(void)
+static char	*get_tmp_filename(t_minishell *data)
 {
-	// replace in data, currently placeholder
-	static int	counter = 0;
-
 	char		*pid_str;
 	char		*cnt_str;
 	char		*base;
 	char		*res;
 
 	pid_str = ft_itoa(getpid());
-	cnt_str = ft_itoa(counter++);
+	cnt_str = ft_itoa(data->heredoc_count++);
 	base = ft_strjoin(".heredoc_tmp_", pid_str);
 	free(pid_str);
 	pid_str = ft_strjoin(base, "_");
@@ -38,6 +35,62 @@ static char	*get_tmp_filename(void)
 }
 
 /**
+ * @brief Intercepts keystroke entries dynamically.
+ * If ASCII 4 (Ctrl+D) is detected, it handles the terminal cursor adjustment
+ * and breaks out cleanly.
+ */
+char	*get_heredoc_line_raw(void)
+{
+	char	ch;
+	char	buffer[4096];
+	int		i;
+	ssize_t	ret;
+
+	i = 0;
+	ft_bzero(buffer, 4096);
+	while (1)
+	{
+		ret = read(STDIN_FILENO, &ch, 1);
+		if (ret < 0)
+			return (ft_putstr_fd("shelld0n: read: heredoc\n", 2), NULL);
+		if (ch == 4)
+			return (NULL);
+		if (manage_heredoc_chars(&ch, buffer, &i))
+			break ;
+	}
+	return (ft_strdup(buffer));
+}
+
+/**
+ * @brief Retrives the line from the raw buffer.
+ */
+static int	retrieve_line(char **line, t_redir *redir, t_minishell *data)
+{
+	char	*expanded;
+
+	write(1, "> ", 2);
+	(*line) = get_heredoc_line_raw();
+	if (!(*line))
+	{
+		ft_putstr_fd("\nshelld0n: warning: delimited end-of-file (wanted `", 2);
+		ft_putstr_fd(redir->file, 2);
+		ft_putstr_fd("')\n", 2);
+		return (1);
+	}
+	if (!(*line)
+		|| (ft_strncmp((*line), redir->file, ft_strlen(redir->file)) == 0
+			&& (*line)[ft_strlen(redir->file)] == '\n'))
+		return (1);
+	if (redir->expand_heredoc)
+	{
+		expanded = expand_heredoc_body((*line), data->processed_env);
+		free((*line));
+		(*line) = expanded;
+	}
+	return (0);
+}
+
+/**
  * @brief
  */
 static void	read_heredoc(t_redir *redir, t_minishell *data)
@@ -46,25 +99,22 @@ static void	read_heredoc(t_redir *redir, t_minishell *data)
 	char	*line;
 	char	*tmp_file;
 
-	tmp_file = get_tmp_filename();
+	tmp_file = get_tmp_filename(data);
 	fd = open(tmp_file, O_CREAT | O_WRONLY | O_TRUNC, 0644);
+	enable_raw_mode(data);
 	while (1)
 	{
-		write(1, "> ", 2);
-		line = get_next_line(STDIN_FILENO);
-		if (!line || (ft_strncmp(line, redir->file, ft_strlen(redir->file)) == 0
-				&& line[ft_strlen(redir->file)] == '\n'))
+		if (retrieve_line(&line, redir, data))
 			break ;
-		if (redir->expand_heredoc)
-			line = expand_heredoc_body(line, data->processed_env);
 		ft_putstr_fd(line, fd);
 		free(line);
 	}
 	if (line)
 		free(line);
+	disable_raw_mode(data);
 	close(fd);
-	free(redir->file); // Drop old delimiter string
-	redir->file = tmp_file; // Assign directly to disk path
+	free(redir->file);
+	redir->file = tmp_file;
 }
 
 /**
